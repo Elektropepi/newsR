@@ -18,6 +18,7 @@ const App: React.FC = () => {
         >
           Learn React very easily
           <button>bla</button>
+          Bla
         </a>
       </header>
     </div>
