@@ -5,7 +5,7 @@ import moment from "moment";
 import {GroupInterface} from "../group/Group";
 
 export function mockServer(): ServerInterface {
-    return {url: new URL('news://news.tugraz.at:119'), groups: generateGroups(randomInt(5, 20))};
+    return {host: 'news.tugraz.at', port: 119, groups: generateGroups(randomInt(5, 20))};
 }
 
 function generateGroups(count: number): () => Promise<GroupInterface[]> {

@@ -15,7 +15,7 @@ export default class App extends React.Component<any, State> {
   constructor(props: any) {
     super(props);
     this.state = { loading: true, group0: null };
-    this.server = new Server(new URL('news://news.tugraz.at:119'));
+    this.server = new Server('news.tugraz.at', 119);
   }
 
   async componentDidMount(): Promise<void> {
