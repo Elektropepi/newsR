@@ -5,21 +5,21 @@ import {ArticleDetail} from "../article/ArticleDetail";
 import {Article} from "../article/Article";
 
 interface Props {
-    group: Group | null;
+    group: Group;
 }
 
 interface State {
-    selectedArticle: Article | null
+    loading: boolean;
+    selectedArticle: Article | null;
+    threads: Article[];
 }
 
 export class GroupDetail extends React.Component<Props, State> {
 
-    static defaultProps: Props = {
-        group: null
-    };
-
     state: Readonly<State> = {
-        selectedArticle: null
+        loading: true,
+        selectedArticle: null,
+        threads: []
     };
 
     private onArticleClick(article: Article) {
@@ -28,9 +28,14 @@ export class GroupDetail extends React.Component<Props, State> {
         });
     }
 
+    async componentDidMount(): Promise<void> {
+        const threads = await this.props.group.threads();
+        this.setState({ loading: false, threads: threads });
+    }
+
     render() {
         const { group } = this.props;
-        const { selectedArticle } = this.state;
+        const { selectedArticle, threads } = this.state;
 
         if(group === null) {
             return null;
@@ -40,7 +45,7 @@ export class GroupDetail extends React.Component<Props, State> {
             <div>
                 <h1>Group {group.name}</h1>
                 <div className="article-list">
-                    <ArticleList articles={group.threads} onArticleClick={article => this.onArticleClick(article)} />
+                    <ArticleList articles={threads} onArticleClick={article => this.onArticleClick(article)} />
                 </div>
                 <div className="article-detail">
                     { selectedArticle !== null && <ArticleDetail article={selectedArticle}/> }

@@ -7,5 +7,5 @@ export interface Article {
     content: string,
     date: Moment,
     author: Author,
-    followUps: Article[]
+    followUps(): Promise<Article[]>
 }
