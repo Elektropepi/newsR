@@ -8,27 +8,25 @@ interface ResponseHandler {
 }
 
 class WsConnection {
-    private _socket: WebSocket;
-    private _host: string;
-    private _port: number;
+    private readonly _socket: WebSocket;
+    private readonly _host: string;
+    private readonly _port: number;
     private _queue: ResponseHandler[];
 
     // todo: type tlsOptions: TlsOptions
     constructor(host: string, port: number, tlsPort: boolean, tlsOptions: any) {
-        this._socket = new WebSocket('ws://localhost:8080'); // todo: not sure about this..
+        // todo: not sure if this should be here or in .connect()
+        // todo: make websocket url configurable.
+        this._socket = new WebSocket('ws://localhost:8080');
         this._host = host;
         this._port = port;
         this._queue = [];
     }
 
-    // todo: connect to websocket and then connect to tpc "socket"..
-    // todo: rewrite tls support to wss?
     public connect = async (): Promise<WebSocket> => {
-        //this._socket = new WebSocket('ws://localhost');
         return new Promise((resolve) => {
             this._socket.addEventListener('open', () => {
                 this.write(`NNTPCONNECT ${this._host} ${this._port}`);
-                // this._port, this._host
                 this._addSocketHandlers();
                 //return this._tlsPort ? this.upgradeTls() : Promise.resolve(this._socket);
                 resolve(this._socket);
@@ -51,9 +49,6 @@ class WsConnection {
     };
 
     public write = (str: string): void => {
-        /*if (this._compress) {
-            str = zlib.deflateSync(str).toString('base64')
-        }*/
         this._socket.send(str);
     };
 
@@ -61,7 +56,6 @@ class WsConnection {
         this._queue.push({ callback, resolve, reject })
     };
 
-    // todo: ...
     private _addSocketHandlers = (): void => {
         this._socket.onmessage = (event) => {
             const responseHandler = this._queue[0];
@@ -96,7 +90,6 @@ class WsNewsie extends Newsie {
         this._wsConnection = new WsConnection(host, port, tlsPort, tlsOptions)
     }
 
-
     public connect = async (): Promise<any> => {
         const socket = await this._wsConnection.connect();
         const response = await this.sendData(Command.GREETING);
@@ -117,7 +110,6 @@ class WsNewsie extends Newsie {
       })
         //.then(this._interceptor)
         .then((response: any) => (response.code < 400 ? response : Promise.reject(response)))
-
 }
 
 export interface ServerInterface {
@@ -139,8 +131,6 @@ export class Server implements ServerInterface {
         this.newsieClient = Server.initWsNewsieClient(this.host, this.port);
     }
 
-    // todo: does this work with tls?
-    // todo: inject websocket connection socket
     private static initWsNewsieClient(host: string, port?: number | undefined): WsNewsie {
         const newsieOptions: NewsieOptions = {
             host
