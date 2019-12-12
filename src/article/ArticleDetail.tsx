@@ -25,12 +25,14 @@ export class ArticleDetail extends React.Component<Props, State> {
             return null;
         }
 
+        // todo: article content
+
         return (
             <div>
                 <h2>{article.subject}</h2>
                 <h3>{article.author.email} - {article.date.format("DD.MM.YYYY")}</h3>
                 <p>
-                    {article.content}
+                    loading... todo
                 </p>
             </div>
         )

@@ -1,6 +1,6 @@
 import {Server, ServerInterface} from "../server/Server";
 import {Author} from "../author/Author";
-import {Article} from "../article/Article";
+import {Article, ArticleInterface} from "../article/Article";
 import moment from "moment";
 import {GroupInterface} from "../group/Group";
 
@@ -20,19 +20,19 @@ function generateGroups(count: number): () => Promise<GroupInterface[]> {
     return async() => groups;
 }
 
-function generateArticles(count: number, hasFollowUps: boolean): () => Promise<Article[]> {
+function generateArticles(count: number, hasFollowUps: boolean): () => Promise<ArticleInterface[]> {
     const author1: Author = {email: "bla.bla@asf.at", name: "Elektro Pepi"};
     const author2: Author = {email: "test.test@test.xx", name: "Fuada Maschin"};
-    let articles: Article[] = [];
+    let articles: ArticleInterface[] = [];
     for (let i = 0; i < count; i++) {
-        let followUps: () => Promise<Article[]> = async() => [];
-        if (hasFollowUps) {
+        let followUps: ArticleInterface[] = [];
+        /*if (hasFollowUps) {
             followUps = generateArticles(randomInt(1, 10), Math.random() < 0.5);
-        }
+        }*/
         articles.push({
-            id: randomInt(0, Number.MAX_SAFE_INTEGER),
+            id: randomString(randomInt(30, 60)) + randomInt(0, Number.MAX_SAFE_INTEGER),
             subject: randomString(randomInt(1, 3)),
-            content: randomString(randomInt(30, 60)),
+            content: async () => randomString(randomInt(30, 60)),
             date: moment(),
             author: Math.random() < 0.5 ? author1 : author2,
             followUps: followUps
