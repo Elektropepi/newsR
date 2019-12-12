@@ -39,9 +39,12 @@ export class Article implements ArticleInterface {
         this.directReference = this.references[this.references.length - 1];
     }
 
-    // todo
     public async content(): Promise<string> {
-        //const article = await this.newsieClient.article(this.id);
-        return '';
+        const article = await this.newsieClient.article(this.id);
+        if (!article.article.body) {
+            return '';
+        }
+        // todo: maybe add line break as join character
+        return article.article.body.join();
     }
 }
