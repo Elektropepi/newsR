@@ -17,6 +17,7 @@ export class ArticleDetail extends React.Component<Props, State> {
       content: ''
     };
 
+    // todo: should reload content for different articles shown..
     async componentDidMount(): Promise<void> {
       const content = await this.props.article.content();
       this.setState({ loading: false, content: content });
