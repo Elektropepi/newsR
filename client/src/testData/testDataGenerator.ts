@@ -1,15 +1,15 @@
-import {Server} from "../server/Server";
+import {Server, ServerInterface} from "../server/Server";
 import {Author} from "../author/Author";
-import {Article} from "../article/Article";
+import {Article, ArticleInterface} from "../article/Article";
 import moment from "moment";
-import {Group} from "../group/Group";
+import {GroupInterface} from "../group/Group";
 
-export function mockServer(): Server {
-    return {url: "news.tugraz.at", groups: generateGroups(randomInt(5, 20))};
+export function mockServer(): ServerInterface {
+    return {host: 'news.tugraz.at', port: 119, groups: generateGroups(randomInt(5, 20))};
 }
 
-function generateGroups(count: number): Group[] {
-    let groups: Group[] = [];
+function generateGroups(count: number): () => Promise<GroupInterface[]> {
+    let groups: GroupInterface[] = [];
     for (let i = 0; i < count; i++) {
         groups.push({
            name: randomString(),
@@ -17,24 +17,28 @@ function generateGroups(count: number): Group[] {
            threads: generateArticles(randomInt(5, 20), false)
         });
     }
-    return groups;
+    return async() => groups;
 }
 
-function generateArticles(count: number, hasFollowUps: boolean): Article[] {
+function generateArticles(count: number, hasFollowUps: boolean): () => Promise<ArticleInterface[]> {
     const author1: Author = {email: "bla.bla@asf.at", name: "Elektro Pepi"};
     const author2: Author = {email: "test.test@test.xx", name: "Fuada Maschin"};
-    let articles: Article[] = [];
+    let articles: ArticleInterface[] = [];
     for (let i = 0; i < count; i++) {
+        let followUps: ArticleInterface[] = [];
+        /*if (hasFollowUps) {
+            followUps = generateArticles(randomInt(1, 10), Math.random() < 0.5);
+        }*/
         articles.push({
-            id: randomInt(0, Number.MAX_SAFE_INTEGER),
+            id: randomString(randomInt(30, 60)) + randomInt(0, Number.MAX_SAFE_INTEGER),
             subject: randomString(randomInt(1, 3)),
-            content: randomString(randomInt(30, 60)),
+            content: async () => randomString(randomInt(30, 60)),
             date: moment(),
             author: Math.random() < 0.5 ? author1 : author2,
-            followUps: hasFollowUps ? generateArticles(randomInt(1, 10), Math.random() < 0.5) : []
+            followUps: followUps
         });
     }
-    return articles;
+    return async() => articles;
 }
 
 function randomInt(minInclusive: number = 0, maxExclusive: number = 1000): number {
