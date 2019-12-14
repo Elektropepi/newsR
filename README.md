@@ -2,10 +2,11 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
 
-### Server
+## Server
 The server communicates with the newsgroup server using NNTP. 
+
+### Available Scripts
 
 In the directory `server/`, you can run:
 
@@ -17,8 +18,18 @@ Installs dependencies.
 
 Starts the NodeJS server.
 
-### Client
+## Client
 The client communicates with the NodeJS server in `server/` and displays newsgroup entries.
+
+### IntelliJ specifics
+To get IntelliJ working with the TypeScript settings configured in `client/tsconfig.json`, one needs to configure
+the typescript scope:  
+- Go to File -> Settings -> Languages & Frameworks
+- Click on "..." besides Compile scope
+- Then add a scope, call it e.g. "Client"
+- For the pattern enter `file[newsr]:client//*`
+
+### Available Scripts
 
 In the directory `client/`, you can run:
 
