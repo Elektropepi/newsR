@@ -17,7 +17,7 @@ class WsConnection {
     constructor(host: string, port: number, tlsPort: boolean, tlsOptions: any) {
         // todo: not sure if this should be here or in .connect()
         // todo: make websocket url configurable.
-        this._socket = new WebSocket('ws://localhost:8080');
+        this._socket = new WebSocket(`ws://${window.location.hostname}:8080`);
         this._host = host;
         this._port = port;
         this._queue = [];

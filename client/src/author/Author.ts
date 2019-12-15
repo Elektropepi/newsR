@@ -8,9 +8,18 @@ export class Author implements AuthorInterface {
     public readonly email: string;
 
     public static authorFromString(nameEmail: string) {
-        const parts = nameEmail.split(' <');
-        const email = parts[1].replace('>', '');
-        return new Author(parts[0], email);
+        const nameEmailRegexp = new RegExp('(.*?) <(.*?)>');
+        const nameEmailResult = nameEmailRegexp.exec(nameEmail);
+        let name:string;
+        let email:string;
+        if(nameEmailResult === null) {
+            name = nameEmail;
+            email = "placeholder.mail@srvr.at";
+        } else {
+            name = nameEmailResult[1];
+            email = nameEmailResult[2];
+        }
+        return new Author(name, email);
     }
 
     constructor(name: string, email: string) {

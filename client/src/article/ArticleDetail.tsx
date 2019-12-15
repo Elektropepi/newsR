@@ -17,10 +17,20 @@ export class ArticleDetail extends React.Component<Props, State> {
       content: ''
     };
 
-    // todo: should reload content for different articles shown..
-    async componentDidMount(): Promise<void> {
-      const content = await this.props.article.content();
-      this.setState({ loading: false, content: content });
+    async componentDidMount() {
+        this.loadContent();
+    }
+
+    async componentDidUpdate(prevProps: Props) {
+        if(this.props.article.id !== prevProps.article.id) {
+            this.loadContent();
+        }
+    }
+
+    private async loadContent() {
+        this.setState({ loading: true });
+        const content = await this.props.article.content();
+        this.setState({ loading: false, content: content });
     }
 
     render() {
@@ -31,10 +41,8 @@ export class ArticleDetail extends React.Component<Props, State> {
             return null;
         }
 
-        // todo: article content
-
         return (
-            <div>
+            <div className="article-detail">
                 <h2>{article.subject}</h2>
                 <h3>{article.author.email} - {article.date.format("DD.MM.YYYY")}</h3>
                 <p>

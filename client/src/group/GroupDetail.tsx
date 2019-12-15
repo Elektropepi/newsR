@@ -3,6 +3,7 @@ import {Group} from "./Group";
 import {ArticleList} from "../article/ArticleList";
 import {ArticleDetail} from "../article/ArticleDetail";
 import {Article} from "../article/Article";
+import {SidebarContent} from "../template/SidebarContent";
 
 interface Props {
     group: Group;
@@ -42,15 +43,8 @@ export class GroupDetail extends React.Component<Props, State> {
         }
 
         return (
-            <div>
-                <h1>Group {group.name}</h1>
-                <div className="article-list">
-                    <ArticleList articles={threads} onArticleClick={article => this.onArticleClick(article)} />
-                </div>
-                <div className="article-detail">
-                    { selectedArticle !== null && <ArticleDetail article={selectedArticle}/> }
-                </div>
-            </div>
+            <SidebarContent sidebar={<ArticleList articles={threads} onArticleClick={article => this.onArticleClick(article)} />}
+                            content={ selectedArticle !== null && <ArticleDetail article={selectedArticle}/> } />
         )
     }
 }

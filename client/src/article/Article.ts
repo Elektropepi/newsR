@@ -40,11 +40,10 @@ export class Article implements ArticleInterface {
     }
 
     public async content(): Promise<string> {
-        const article = await this.newsieClient.article(this.id);
+        const article = await this.newsieClient.body(this.id);
         if (!article.article.body) {
             return '';
         }
-        // todo: maybe add line break as join character
-        return article.article.body.join();
+        return article.article.body.join("\n");
     }
 }
