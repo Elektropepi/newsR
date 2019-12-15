@@ -3,8 +3,8 @@ import {Article} from "./Article";
 import {Link} from "react-router-dom";
 
 interface Props {
-    article: Article;
-    url: string;
+  article: Article;
+  url: string;
 }
 
 interface State {
@@ -13,16 +13,14 @@ interface State {
 
 export class ArticleListEntry extends React.Component<Props, State> {
 
-    state: Readonly<State> = {
+  state: Readonly<State> = {};
 
-    };
-
-    render() {
-        const { article, url } = this.props;
-        return (
-            <p className="article-list-entry">
-                <Link to={`${url}/${article.id}`}>{article.subject}</Link>
-            </p>
-        )
-    }
+  render() {
+    const {article, url} = this.props;
+    return (
+      <p className="article-list-entry">
+        <Link to={`${url}/${article.id}`}>{article.subject}</Link>
+      </p>
+    )
+  }
 }

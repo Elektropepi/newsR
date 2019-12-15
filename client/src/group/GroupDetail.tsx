@@ -6,7 +6,7 @@ import {SidebarContent} from "../template/SidebarContent";
 import {GroupTitle} from "./GroupTitle";
 import {AppGrid} from "../template/AppGrid";
 import {Server} from "../server/Server";
-import {Switch, Route, RouteComponentProps} from "react-router-dom"
+import {Route, RouteComponentProps, Switch} from "react-router-dom"
 
 interface State {
   loading: boolean;
@@ -56,7 +56,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
           content={
             <Switch>
               <Route path={`${match.path}/:id`} render={props =>
-                <ArticleDetail {...props} group={group} />
+                <ArticleDetail {...props} group={group}/>
               }/>
               <Route path={`${match.path}`}>
                 <h3>Please select a thread</h3>

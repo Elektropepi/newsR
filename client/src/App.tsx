@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react';
 import './App.scss';
 import {GroupDetail} from "./group/GroupDetail";
-import {Switch, Route, Link} from "react-router-dom"
+import {Link, Route, Switch} from "react-router-dom"
 
 
 export default class App extends React.Component {
