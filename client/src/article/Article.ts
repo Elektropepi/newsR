@@ -2,7 +2,7 @@ import {Moment} from "moment";
 import Newsie from 'newsie';
 import {Author} from "../author/Author";
 
-type ArticleId = string;
+export type ArticleId = string;
 
 export interface ArticleInterface {
     id: ArticleId,

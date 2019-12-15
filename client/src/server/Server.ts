@@ -115,6 +115,7 @@ class WsNewsie extends Newsie {
 export interface ServerInterface {
     readonly host: string;
     readonly port: number | undefined;
+    getGroupByName(name: string): Promise<GroupInterface | null>;
     groups(): Promise<GroupInterface[]>;
 }
 
@@ -122,6 +123,7 @@ export class Server implements ServerInterface {
     public readonly host: string;
     public readonly port: number | undefined;
     private readonly newsieClient: WsNewsie;
+    private static server: Server | null = null;
 
     constructor(host: string, port?: number) {
         this.host = host;
@@ -141,7 +143,15 @@ export class Server implements ServerInterface {
         return new WsNewsie(newsieOptions);
     }
 
-    public async groups(): Promise<Group[]> {
+    public static async instance(): Promise<Server> {
+        if(this.server === null) {
+            this.server = new Server('news.tugraz.at', 119);
+            await this.server.connectAndVerifyNewsieClient();
+        }
+        return this.server;
+    }
+
+    public async connectAndVerifyNewsieClient() {
         const connection = await this.newsieClient.connect();
         if (connection.code !== 200) {
             throw Error('No connection to server.');
@@ -150,6 +160,20 @@ export class Server implements ServerInterface {
         if (!capabilities.capabilities.LIST.includes('NEWSGROUPS')) {
             throw Error('Server does\'t have the required LIST NEWSGROUPS capability.');
         }
+    }
+
+    public async getGroupByName(name: string): Promise<Group | null> {
+        const newsgroups = await this.newsieClient.listNewsgroups(name);
+        if(newsgroups.newsgroups.length !== 1) {
+            return null;
+        }
+        return newsgroups.newsgroups.map((ng) => {
+            const description = typeof ng.description === 'undefined' ? '' : ng.description;
+            return new Group(ng.name, description, this.newsieClient);
+        })[0];
+    }
+
+    public async groups(): Promise<Group[]> {
         // todo: remove 'tu-graz*' once https://gitlab.com/timrs2998/newsie/merge_requests/2 is merged
         const newsgroups = await this.newsieClient.listNewsgroups('tu-graz*');
         return newsgroups.newsgroups.map((ng) => {

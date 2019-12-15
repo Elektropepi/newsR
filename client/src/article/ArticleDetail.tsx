@@ -1,44 +1,67 @@
 import React from "react";
-import {Article} from "./Article";
+import {Article, ArticleId} from "./Article";
+import {RouteComponentProps} from "react-router-dom";
+import {Group} from "../group/Group";
 
-interface Props {
-    article: Article;
-}
 
 interface State {
   loading: boolean;
-  content: string;
+  article: Article | null;
+  content: string
+}
+
+interface ArticleDetailRouteParams {
+  id: ArticleId;
+}
+
+interface Props extends RouteComponentProps<ArticleDetailRouteParams>{
+  group: Group;
 }
 
 export class ArticleDetail extends React.Component<Props, State> {
 
     state: Readonly<State> = {
       loading: true,
-      content: ''
+      article: null,
+      content: ""
     };
 
     async componentDidMount() {
-        this.loadContent();
+      this.loadContent();
     }
 
     async componentDidUpdate(prevProps: Props) {
-        if(this.props.article.id !== prevProps.article.id) {
+        if(this.props.match.params.id !== prevProps.match.params.id) {
             this.loadContent();
         }
     }
 
     private async loadContent() {
         this.setState({ loading: true });
-        const content = await this.props.article.content();
-        this.setState({ loading: false, content: content });
+        // FIXME: cache result of threads() somewhere. Can't call newsieClient.article() because
+        // here I need the followUp structure that's constructed in threads()
+        const threads = await this.props.group.threads();
+        const thread = threads.find(thread => thread.id === this.props.match.params.id);
+        if(thread === undefined) {
+          this.setState({
+            loading: false,
+            article: null,
+            content: ""
+          });
+          return;
+        }
+        const content = await thread.content();
+        this.setState({ loading: false, article: thread, content: content });
     }
 
     render() {
-        const { article } = this.props;
-        const { loading, content } = this.state;
+        const { article, loading, content } = this.state;
+        if(loading) {
+          return "Loading...";
+        }
 
         if(article === null) {
-            return null;
+            return "Article not found!";
         }
 
         return (
@@ -46,7 +69,7 @@ export class ArticleDetail extends React.Component<Props, State> {
                 <h2>{article.subject}</h2>
                 <h3>{article.author.email} - {article.date.format("DD.MM.YYYY")}</h3>
                 <p>
-                  {loading ? 'loading...' : content}
+                  {content}
                 </p>
             </div>
         )

@@ -25,7 +25,7 @@ export class Group implements GroupInterface {
     }
 
     public async threads(): Promise<Article[]> {
-        const group = (await this.newsieClient.group('tu-graz.lv.it-sicherheit')).group;
+        const group = (await this.newsieClient.group(this.name)).group;
         if (group.number === 0) {
             return [];
         }

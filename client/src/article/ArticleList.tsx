@@ -1,36 +1,39 @@
 import React from "react";
 import {Article} from "./Article";
 import {ArticleListEntry} from "./ArticleListEntry";
-
-interface Props {
-    articles: Article[];
-    onArticleClick: (article: Article) => void;
-}
+import {Group} from "../group/Group";
 
 interface State {
+    loading: boolean;
+    threads: Article[];
+}
 
+interface Props {
+    group: Group;
+    url: string;
 }
 
 export class ArticleList extends React.Component<Props, State> {
-
-    static defaultProps: Props = {
-        articles: [],
-        onArticleClick: () => {}
-    };
-
     state: Readonly<State> = {
-
+        loading: true,
+        threads: []
     };
-
+    async componentDidMount(): Promise<void> {
+        const threads = await this.props.group.threads();
+        this.setState({loading: false, threads: threads});
+    }
     render() {
-        const { articles, onArticleClick } = this.props;
-
+        const { url } = this.props;
+        const { threads, loading } = this.state;
+        if(loading) {
+            return "Loading...";
+        }
         return (
-            <div>
-                {articles.map(article =>
-                    <ArticleListEntry key={article.id} article={article} onClick={onArticleClick} />
-                )}
-            </div>
-        )
+          <div>
+              {threads.map(article =>
+                <ArticleListEntry key={article.id} article={article} url={url} />
+              )}
+          </div>
+        );
     }
 }
