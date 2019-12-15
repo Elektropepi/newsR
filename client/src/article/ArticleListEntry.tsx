@@ -29,7 +29,7 @@ export class ArticleListEntry extends React.Component<Props, State> {
 
 
         return (
-            <p onClick={() => onClick(article)}>
+            <p className="article-list-entry" onClick={() => onClick(article)}>
                 {article.subject}
             </p>
         )

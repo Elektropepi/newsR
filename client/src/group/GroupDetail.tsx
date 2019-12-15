@@ -31,7 +31,8 @@ export class GroupDetail extends React.Component<Props, State> {
 
     async componentDidMount(): Promise<void> {
         const threads = await this.props.group.threads();
-        this.setState({ loading: false, threads: threads });
+        const selectedArticle = threads.length > 0 ? threads[0] : null;
+        this.setState({ loading: false, threads: threads, selectedArticle: selectedArticle });
     }
 
     render() {
