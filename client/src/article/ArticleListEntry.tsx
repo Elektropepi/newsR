@@ -1,9 +1,10 @@
 import React from "react";
 import {Article} from "./Article";
+import {Link} from "react-router-dom";
 
 interface Props {
-    article: Article | null;
-    onClick: (article: Article) => void;
+  article: Article;
+  url: string;
 }
 
 interface State {
@@ -12,26 +13,14 @@ interface State {
 
 export class ArticleListEntry extends React.Component<Props, State> {
 
-    static defaultProps: Props = {
-        article: null,
-        onClick: () => {}
-    };
+  state: Readonly<State> = {};
 
-    state: Readonly<State> = {
-
-    };
-
-    render() {
-        const { article, onClick } = this.props;
-        if(article === null) {
-            return null;
-        }
-
-
-        return (
-            <p onClick={() => onClick(article)}>
-                {article.subject}
-            </p>
-        )
-    }
+  render() {
+    const {article, url} = this.props;
+    return (
+      <p className="article-list-entry">
+        <Link to={`${url}/${article.id}`}>{article.subject}</Link>
+      </p>
+    )
+  }
 }

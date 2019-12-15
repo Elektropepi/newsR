@@ -2,55 +2,69 @@ import React from "react";
 import {Group} from "./Group";
 import {ArticleList} from "../article/ArticleList";
 import {ArticleDetail} from "../article/ArticleDetail";
-import {Article} from "../article/Article";
-
-interface Props {
-    group: Group;
-}
+import {SidebarContent} from "../template/SidebarContent";
+import {GroupTitle} from "./GroupTitle";
+import {AppGrid} from "../template/AppGrid";
+import {Server} from "../server/Server";
+import {Route, RouteComponentProps, Switch} from "react-router-dom"
 
 interface State {
-    loading: boolean;
-    selectedArticle: Article | null;
-    threads: Article[];
+  loading: boolean;
+  group: Group | null;
 }
 
-export class GroupDetail extends React.Component<Props, State> {
+export interface GroupRouteParams {
+  name: string;
+}
 
-    state: Readonly<State> = {
-        loading: true,
-        selectedArticle: null,
-        threads: []
-    };
+export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteParams>, State> {
 
-    private onArticleClick(article: Article) {
-        this.setState({
-            selectedArticle: article
-        });
+  state: Readonly<State> = {
+    loading: true,
+    group: null
+  };
+
+  async componentDidMount(): Promise<void> {
+    const server = await Server.instance();
+    const group = await server.getGroupByName(this.props.match.params.name);
+    if (group === null) {
+      this.setState({
+        loading: false,
+        group: null
+      });
+      return;
+    }
+    this.setState({loading: false, group: group});
+  }
+
+  render() {
+    const {match} = this.props;
+    const {loading, group} = this.state;
+    if (loading) {
+      return "Loading ...";
     }
 
-    async componentDidMount(): Promise<void> {
-        const threads = await this.props.group.threads();
-        this.setState({ loading: false, threads: threads });
+    if (group === null) {
+      return "Group not found!";
     }
 
-    render() {
-        const { group } = this.props;
-        const { selectedArticle, threads } = this.state;
-
-        if(group === null) {
-            return null;
+    return (
+      <AppGrid
+        header={<GroupTitle group={group}/>}
+        body={<SidebarContent
+          sidebar={<ArticleList group={group} url={match.url}/>}
+          content={
+            <Switch>
+              <Route path={`${match.path}/:id`} render={props =>
+                <ArticleDetail {...props} group={group}/>
+              }/>
+              <Route path={`${match.path}`}>
+                <h3>Please select a thread</h3>
+              </Route>
+            </Switch>
+          }/>
         }
-
-        return (
-            <div>
-                <h1>Group {group.name}</h1>
-                <div className="article-list">
-                    <ArticleList articles={threads} onArticleClick={article => this.onArticleClick(article)} />
-                </div>
-                <div className="article-detail">
-                    { selectedArticle !== null && <ArticleDetail article={selectedArticle}/> }
-                </div>
-            </div>
-        )
-    }
+        footer={<div></div>}/>
+    )
+  }
 }
