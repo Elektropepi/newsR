@@ -9,6 +9,9 @@ $headerFontColor: $paper;
 $sidebarBg: $paper;
 $fontColor: $charcoal;
 
+$headerHeight: 2.5rem;
+$footerHeight: 0rem;
+
 .app {
   color: $fontColor;
 
@@ -40,6 +43,14 @@ $fontColor: $charcoal;
     a {
       display: block;
       padding: 1rem;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .author-name {
+      font-size: 0.9rem;
+    }
+    .date {
+      font-size: 0.8rem;
     }
   }
 
@@ -68,10 +79,12 @@ $fontColor: $charcoal;
     grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
     grid-template-rows: auto;
     grid-template-areas: "sidebar content";
+    height: calc(100vh - #{$headerHeight} - #{$footerHeight});
 
     .sidebar-content-sidebar {
       grid-area: sidebar;
       background: $sidebarBg;
+      overflow-y: auto;
     }
 
     .sidebar-content-content {
@@ -83,7 +96,7 @@ $fontColor: $charcoal;
     .group-title {
       a {
         display: block;
-        padding: .7rem;
+        padding: .4rem 1rem;
       }
     }
   }
@@ -91,15 +104,17 @@ $fontColor: $charcoal;
   .app-grid {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 1fr auto 1fr;
+    grid-template-rows: $headerHeight auto $footerHeight;
     grid-template-areas: "header" "body" "footer";
 
     .app-grid-header {
       grid-area: header;
-      font-size: 2.5rem;
-      text-align: center;
+      font-size: 1.5rem;
+      text-align: left;
       background: $headerBg;
       color: white;
+      position: sticky;
+      top: 0;
     }
 
     .app-grid-body {

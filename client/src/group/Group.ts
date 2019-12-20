@@ -33,7 +33,6 @@ export class Group implements GroupInterface {
     // todo: fix type
     const overview: any = await this.newsieClient.over(`${group.low}-${group.high}`);
     const articlesByNumber: Article[] = overview.articles
-      .sort((a: any, b: any) => a.articleNumber - b.articleNumber)
       .map((a: any) => {
         const date = moment(a.headers.DATE);
         const author = Author.authorFromString(a.headers.FROM);
@@ -53,6 +52,7 @@ export class Group implements GroupInterface {
         }
       }
     });
+    threads.sort((a: Article, b: Article) => b.date.unix() - a.date.unix());
     return threads;
   }
 }
