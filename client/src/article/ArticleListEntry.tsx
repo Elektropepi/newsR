@@ -19,7 +19,7 @@ export class ArticleListEntry extends React.Component<Props, State> {
     const {article, url} = this.props;
     return (
       <p className="article-list-entry">
-        <Link to={`${url}/${article.id}`}>{article.subject}</Link>
+        <Link className="no-link" to={`${url}/${article.id}`}>{article.subject}</Link>
       </p>
     )
   }

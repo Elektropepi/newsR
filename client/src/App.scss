@@ -11,13 +11,83 @@ $fontColor: $charcoal;
 
 .app {
   color: $fontColor;
+
+  .no-link {
+    &:link {
+      text-decoration: inherit;
+      color: inherit;
+    }
+
+    &:visited {
+      text-decoration: inherit;
+      color: inherit;
+    }
+  }
+
   p, h1, h2, h3, h4, h5, h6 {
     margin: 0;
   }
+
   h1 {
     font-size: 2rem;
     font-weight: normal;
   }
+
+  .article-list-entry {
+    cursor: pointer;
+    border-bottom: solid 1px lighten($fontColor, 60%);
+
+    a {
+      display: block;
+      padding: 1rem;
+    }
+  }
+
+  .article-detail {
+    // show \n as breaks: https://stackoverflow.com/a/44413780/2306363
+    white-space: pre-line;
+
+    .article-detail-header {
+      color: lighten($paper, 30%);
+      background: darken($silk, 7%);
+      padding: 1rem;
+    }
+
+    .article-detail-author {
+      font-size: 0.9rem;
+    }
+
+    .article-detail-content {
+      padding: 1rem;
+      font-size: 1.3rem;
+    }
+  }
+
+  .sidebar-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    grid-template-rows: auto;
+    grid-template-areas: "sidebar content";
+
+    .sidebar-content-sidebar {
+      grid-area: sidebar;
+      background: $sidebarBg;
+    }
+
+    .sidebar-content-content {
+      grid-area: content;
+    }
+  }
+
+  .group-detail {
+    .group-title {
+      a {
+        display: block;
+        padding: .7rem;
+      }
+    }
+  }
+
   .app-grid {
     display: grid;
     grid-template-columns: auto;
@@ -30,63 +100,11 @@ $fontColor: $charcoal;
       text-align: center;
       background: $headerBg;
       color: white;
-      padding: .7rem;
     }
 
     .app-grid-body {
       grid-area: body;
       min-width: 0;
-
-      .sidebar-content {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
-        grid-template-rows: auto;
-        grid-template-areas: "sidebar content";
-
-        .sidebar-content-sidebar {
-          grid-area: sidebar;
-          background: $sidebarBg;
-
-          .article-list-entry {
-            cursor: pointer;
-            border-bottom: solid 1px lighten($fontColor, 60%);
-            a {
-              display: block;
-              padding: 1rem;
-              &:link {
-                text-decoration: inherit;
-                color: inherit;
-              }
-
-              &:visited {
-                text-decoration: inherit;
-                color: inherit;
-              }
-            }
-          }
-        }
-
-        .sidebar-content-content {
-          grid-area: content;
-
-          .article-detail {
-            // show \n as breaks: https://stackoverflow.com/a/44413780/2306363
-            white-space: pre-line;
-            .article-detail-header {
-              color: lighten($paper, 30%);
-              background: darken($silk, 7%);
-              padding: 1rem;
-            }
-            .article-detail-author {
-              font-size: 0.9rem;
-            }
-            .article-detail-content {
-              padding: 1rem;
-              font-size: 1.3rem;
-            }
-          }
-        }
-      }
     }
 
     .app-grid-footer {
