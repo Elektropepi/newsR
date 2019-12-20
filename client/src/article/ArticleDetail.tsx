@@ -48,9 +48,13 @@ export class ArticleDetail extends React.Component<Props, State> {
 
     return (
       <div className="article-detail">
-        <h2>{article.subject}</h2>
-        <h3>{article.author.email} - {article.date.format("DD.MM.YYYY")}</h3>
-        <p>
+        <div className="article-detail-header">
+          <h1>{article.subject}</h1>
+          <p className="article-detail-author">
+            {article.date.format("DD.MM.YYYY")} by {article.author.name} ({article.author.email})
+          </p>
+        </div>
+        <p className="article-detail-content">
           {content}
         </p>
       </div>
