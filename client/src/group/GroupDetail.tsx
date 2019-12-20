@@ -9,6 +9,7 @@ import {Server} from "../server/Server";
 import {Route, RouteComponentProps, Switch} from "react-router-dom"
 import Media from "react-media";
 import {SMALL_SCREEN_QUERY} from "../template/Constants";
+import {Loading} from "../template/Loading";
 
 interface State {
   loading: boolean;
@@ -43,7 +44,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
     const {match} = this.props;
     const {loading, group} = this.state;
     if (loading) {
-      return "Loading ...";
+      return (<Loading/>);
     }
 
     if (group === null) {

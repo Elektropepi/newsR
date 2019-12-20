@@ -20,7 +20,7 @@ export class ArticleListEntry extends React.Component<Props, State> {
     return (
       <p className="article-list-entry">
         <Link className="no-link" to={`${url}/${article.id}`}>
-          <p className="subject">{article.subject}</p>
+          <span className="subject">{article.subject}</span><br />
           <span className="author-name">{article.author.name}</span>&nbsp;-&nbsp;
           <span className="date">{article.date.format('DD.MM.YY')}</span>
         </Link>

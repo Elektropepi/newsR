@@ -14,6 +14,9 @@ $footerHeight: 0rem;
 
 .app {
   color: $fontColor;
+  .loading {
+    padding: 1rem;
+  }
 
   .no-link {
     &:link {

@@ -2,6 +2,7 @@ import React from "react";
 import {Article, ArticleId} from "./Article";
 import {RouteComponentProps} from "react-router-dom";
 import {Group} from "../group/Group";
+import {Loading} from "../template/Loading";
 
 
 interface State {
@@ -39,7 +40,7 @@ export class ArticleDetail extends React.Component<Props, State> {
   render() {
     const {article, loading, content} = this.state;
     if (loading) {
-      return "Loading...";
+      return (<Loading />);
     }
 
     if (article === null) {

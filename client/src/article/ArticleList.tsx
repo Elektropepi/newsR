@@ -2,6 +2,7 @@ import React from "react";
 import {Article} from "./Article";
 import {ArticleListEntry} from "./ArticleListEntry";
 import {Group} from "../group/Group";
+import {Loading} from "../template/Loading";
 
 interface State {
   loading: boolean;
@@ -28,7 +29,7 @@ export class ArticleList extends React.Component<Props, State> {
     const {url} = this.props;
     const {threads, loading} = this.state;
     if (loading) {
-      return "Loading...";
+      return (<Loading />);
     }
     return (
       <div>
