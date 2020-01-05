@@ -13,8 +13,8 @@ export function ListEntry<T extends {
     <div>
       <p className="list-entry">
         <Link className="no-link" to={entry.url}>
-          <span className="subject">{entry.title}</span><br/>
-          <span className="author-name">{entry.subtitle}</span>
+          <span className="title">{entry.title}</span><br/>
+          <span className="subtitle">{entry.subtitle}</span>
         </Link>
       </p>
     </div>

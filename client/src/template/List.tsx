@@ -12,7 +12,7 @@ export function List<T extends {
 
   return (
     <div>
-      {data.map(entry => <ListEntry entry={entry}/>)}
+      {data.map((entry, index) => <ListEntry key={index} entry={entry}/>)}
     </div>
   );
 }

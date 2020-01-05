@@ -5,9 +5,10 @@ import App from './App';
 import {BrowserRouter} from 'react-router-dom'
 import * as serviceWorker from './serviceWorker';
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import {faHome, faSpinner} from '@fortawesome/free-solid-svg-icons'
 
 library.add(faSpinner);
+library.add(faHome)
 ReactDOM.render(
   <BrowserRouter>
     <App/>

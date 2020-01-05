@@ -5,12 +5,13 @@ import {SidebarContent} from "../template/SidebarContent";
 import {GroupTitle} from "./GroupTitle";
 import {AppGrid} from "../template/AppGrid";
 import {Server} from "../server/Server";
-import {Route, RouteComponentProps, Switch} from "react-router-dom"
+import {Link, Route, RouteComponentProps, Switch} from "react-router-dom"
 import Media from "react-media";
 import {SMALL_SCREEN_QUERY} from "../template/Constants";
 import {Loading} from "../template/Loading";
 import {Article} from "../article/Article";
 import {List} from "../template/List";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface State {
   loading: boolean;
@@ -65,7 +66,17 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
     return (
       <div className="group-detail">
         <AppGrid
-          header={<GroupTitle group={group} url={match.url}/>}
+          header={
+              <div className="float-div">
+                <div className="float">
+                <Link className="no-link" to={'/'}>
+                  <FontAwesomeIcon icon="home" size="xs"/>
+                </Link>
+                </div>
+
+                <GroupTitle group={group} url={match.url}/>
+              </div>
+            }
           body={<Media query={SMALL_SCREEN_QUERY}>
             {
               screenIsSmall => screenIsSmall
