@@ -18,9 +18,9 @@ export class ArticleListEntry extends React.Component<Props, State> {
   render() {
     const {article, url} = this.props;
     return (
-      <p className="article-list-entry">
+      <p className="list-entry">
         <Link className="no-link" to={`${url}/${article.id}`}>
-          <span className="subject">{article.subject}</span><br />
+          <span className="subject">{article.subject}</span><br/>
           <span className="author-name">{article.author.name}</span>&nbsp;-&nbsp;
           <span className="date">{article.date.format('DD.MM.YY')}</span>
         </Link>
