@@ -40,7 +40,7 @@ export class ArticleDetail extends React.Component<Props, State> {
   render() {
     const {article, loading, content} = this.state;
     if (loading) {
-      return (<Loading />);
+      return (<Loading/>);
     }
 
     if (article === null) {
@@ -49,7 +49,7 @@ export class ArticleDetail extends React.Component<Props, State> {
 
     return (
       <div className="article-detail">
-        <div className="article-detail-header">
+        <div className="header">
           <h1>{article.subject}</h1>
           <p className="article-detail-author">
             {article.date.format("DD.MM.YYYY")} by {article.author.name} ({article.author.email})

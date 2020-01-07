@@ -1,19 +1,22 @@
 import React from "react";
 import {Group} from "./Group";
-import {ArticleList} from "../article/ArticleList";
 import {ArticleDetail} from "../article/ArticleDetail";
 import {SidebarContent} from "../template/SidebarContent";
 import {GroupTitle} from "./GroupTitle";
 import {AppGrid} from "../template/AppGrid";
 import {Server} from "../server/Server";
-import {Route, RouteComponentProps, Switch} from "react-router-dom"
+import {Link, Route, RouteComponentProps, Switch} from "react-router-dom"
 import Media from "react-media";
 import {SMALL_SCREEN_QUERY} from "../template/Constants";
 import {Loading} from "../template/Loading";
+import {Article} from "../article/Article";
+import {List} from "../template/List";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface State {
   loading: boolean;
   group: Group | null;
+  threads: Article[];
 }
 
 export interface GroupRouteParams {
@@ -24,7 +27,8 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
 
   state: Readonly<State> = {
     loading: true,
-    group: null
+    group: null,
+    threads: []
   };
 
   async componentDidMount(): Promise<void> {
@@ -37,12 +41,14 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
       });
       return;
     }
-    this.setState({loading: false, group: group});
+    const threads = await group.threads();
+    this.setState({loading: false, group, threads});
   }
 
   render() {
     const {match} = this.props;
-    const {loading, group} = this.state;
+    const {loading, group, threads} = this.state;
+
     if (loading) {
       return (<Loading/>);
     }
@@ -51,10 +57,26 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
       return "Group not found!";
     }
 
+    const articleListData = threads.map(article => ({
+      title: article.subject,
+      subtitle: `${article.author.name} - ${article.date.format('DD.MM.YY')}`,
+      url: `${match.url}/${article.id}`
+    }))
+
     return (
       <div className="group-detail">
         <AppGrid
-          header={<GroupTitle group={group} url={match.url}/>}
+          header={
+              <div className="float-div">
+                <div className="float">
+                <Link className="no-link" to={'/'}>
+                  <FontAwesomeIcon icon="home" size="xs"/>
+                </Link>
+                </div>
+
+                <GroupTitle group={group} url={match.url}/>
+              </div>
+            }
           body={<Media query={SMALL_SCREEN_QUERY}>
             {
               screenIsSmall => screenIsSmall
@@ -64,12 +86,12 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
                     <ArticleDetail {...props} group={group}/>
                   }/>
                   <Route path={`${match.path}`}>
-                    <ArticleList group={group} url={match.url}/>
+                    <List data={articleListData}/>
                   </Route>
                 </Switch>
                 :
                 <SidebarContent
-                  sidebar={<ArticleList group={group} url={match.url}/>}
+                  sidebar={<List data={articleListData}/>}
                   content={
                     <Switch>
                       <Route path={`${match.path}/:id`} render={props =>
