@@ -3,6 +3,7 @@ import {Server} from "../server/Server";
 import {List} from "../template/List";
 import {Loading} from "../template/Loading";
 import {Group} from "../group/Group";
+import { Helmet } from "react-helmet"
 
 interface StartPageState {
   groups: Group[]
@@ -43,6 +44,9 @@ export function StartPage() {
 
   return (
     <div>
+      <Helmet>
+        <title>newsR - news.tugraz.at</title>
+      </Helmet>
       <div className="header">
         <h1>Welcome to news.tugraz.at</h1>
         <input className="search" type="text" placeholder="Search..." onChange={(e) => filter(e.target.value.toLowerCase())}/>

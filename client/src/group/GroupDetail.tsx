@@ -12,6 +12,7 @@ import {Loading} from "../template/Loading";
 import {Article} from "../article/Article";
 import {List} from "../template/List";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {Helmet} from "react-helmet";
 
 interface State {
   loading: boolean;
@@ -65,6 +66,9 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
 
     return (
       <div className="group-detail">
+        <Helmet>
+          <title>newsR - {group?.name}</title>
+        </Helmet>
         <AppGrid
           header={
               <div className="float-div">

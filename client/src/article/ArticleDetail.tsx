@@ -3,6 +3,7 @@ import {Article, ArticleId} from "./Article";
 import {RouteComponentProps} from "react-router-dom";
 import {Group} from "../group/Group";
 import {Loading} from "../template/Loading";
+import {Helmet} from "react-helmet";
 
 
 interface State {
@@ -49,6 +50,9 @@ export class ArticleDetail extends React.Component<Props, State> {
 
     return (
       <div className="article-detail">
+        <Helmet>
+          <title>newsR - {article?.subject}</title>
+        </Helmet>
         <div className="header">
           <h1>{article.subject}</h1>
           <p className="article-detail-author">
