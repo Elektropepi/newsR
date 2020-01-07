@@ -66,17 +66,28 @@ $footerHeight: 0rem;
     }
   }
 
-  .article-detail {
-    // show \n as breaks: https://stackoverflow.com/a/44413780/2306363
-    white-space: pre-line;
+  .thread-detail {
 
-    .article-detail-author {
-      font-size: 0.9rem;
+    .article-detail {
+      // show \n as breaks: https://stackoverflow.com/a/44413780/2306363
+      white-space: pre-line;
+
+      .article-detail-author {
+        font-size: 0.9rem;
+      }
+
+      .article-detail-content {
+        padding: 1rem;
+        font-size: 1.3rem;
+      }
     }
 
-    .article-detail-content {
-      padding: 1rem;
-      font-size: 1.3rem;
+    ul {
+      list-style-type: none;
+    }
+
+    li {
+      border-left: solid 3px darken($silk, 7%);
     }
   }
 

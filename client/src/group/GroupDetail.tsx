@@ -1,6 +1,6 @@
 import React from "react";
 import {Group} from "./Group";
-import {ArticleDetail} from "../article/ArticleDetail";
+import {ThreadDetail} from "../article/ThreadDetail";
 import {SidebarContent} from "../template/SidebarContent";
 import {GroupTitle} from "./GroupTitle";
 import {AppGrid} from "../template/AppGrid";
@@ -62,7 +62,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
       title: article.subject,
       subtitle: `${article.author.name} - ${article.date.format('DD.MM.YY')}`,
       url: `${match.url}/${article.id}`
-    }))
+    }));
 
     return (
       <div className="group-detail">
@@ -71,23 +71,24 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
         </Helmet>
         <AppGrid
           header={
-              <div className="float-div">
-                <div className="float">
+            <div className="float-div">
+              <div className="float">
                 <Link className="no-link" to={'/'}>
                   <FontAwesomeIcon icon="home" size="xs"/>
                 </Link>
-                </div>
-
-                <GroupTitle group={group} url={match.url}/>
               </div>
-            }
+
+              <GroupTitle group={group} url={match.url}/>
+            </div>
+          }
           body={<Media query={SMALL_SCREEN_QUERY}>
             {
               screenIsSmall => screenIsSmall
                 ?
                 <Switch>
                   <Route path={`${match.path}/:id`} render={props =>
-                    <ArticleDetail {...props} group={group}/>
+                    <ThreadDetail {...props} group={group}
+                                  article={threads.find(thread => thread.id === props.match.params.id) || null}/>
                   }/>
                   <Route path={`${match.path}`}>
                     <List data={articleListData}/>
@@ -99,7 +100,8 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
                   content={
                     <Switch>
                       <Route path={`${match.path}/:id`} render={props =>
-                        <ArticleDetail {...props} group={group}/>
+                        <ThreadDetail {...props} group={group}
+                                      article={threads.find(thread => thread.id === props.match.params.id) || null}/>
                       }/>
                       <Route path={`${match.path}`}>
                         <h3>Please select a thread</h3>

@@ -1,30 +1,20 @@
+import {ArticleInterface} from "./Article";
 import React from "react";
-import {Article, ArticleId} from "./Article";
-import {RouteComponentProps} from "react-router-dom";
-import {Group} from "../group/Group";
 import {Loading} from "../template/Loading";
-import {Helmet} from "react-helmet";
 
+interface Props {
+  article: ArticleInterface,
+  showContent: boolean
+}
 
 interface State {
-  loading: boolean;
-  article: Article | null;
-  content: string
-}
-
-interface ArticleDetailRouteParams {
-  id: ArticleId;
-}
-
-interface Props extends RouteComponentProps<ArticleDetailRouteParams> {
-  group: Group;
+  content: string,
+  isContentLoading: boolean
 }
 
 export class ArticleDetail extends React.Component<Props, State> {
-
   state: Readonly<State> = {
-    loading: true,
-    article: null,
+    isContentLoading: false,
     content: ""
   };
 
@@ -33,54 +23,36 @@ export class ArticleDetail extends React.Component<Props, State> {
   }
 
   async componentDidUpdate(prevProps: Props) {
-    if (this.props.match.params.id !== prevProps.match.params.id) {
+    if (this.props.article !== prevProps.article || this.props.showContent !== prevProps.showContent) {
       this.loadContent();
     }
   }
 
+  private async loadContent() {
+    if (!this.props.showContent) {
+      return;
+    }
+    this.setState({isContentLoading: true, content: ""});
+    const content = await this.props.article.content();
+    this.setState({isContentLoading: false, content: content});
+  }
+
   render() {
-    const {article, loading, content} = this.state;
-    if (loading) {
-      return (<Loading/>);
-    }
-
-    if (article === null) {
-      return "Article not found!";
-    }
-
+    const {article, showContent} = this.props;
+    const {content, isContentLoading} = this.state;
     return (
       <div className="article-detail">
-        <Helmet>
-          <title>newsR - {article?.subject}</title>
-        </Helmet>
         <div className="header">
           <h1>{article.subject}</h1>
           <p className="article-detail-author">
             {article.date.format("DD.MM.YYYY")} by {article.author.name} ({article.author.email})
           </p>
         </div>
-        <p className="article-detail-content">
+        {isContentLoading && <Loading/>}
+        {showContent && <p className="article-detail-content">
           {content}
-        </p>
+        </p>}
       </div>
-    )
-  }
-
-  private async loadContent() {
-    this.setState({loading: true});
-    // FIXME: cache result of threads() somewhere. Can't call newsieClient.article() because
-    // here I need the followUp structure that's constructed in threads()
-    const threads = await this.props.group.threads();
-    const thread = threads.find(thread => thread.id === this.props.match.params.id);
-    if (thread === undefined) {
-      this.setState({
-        loading: false,
-        article: null,
-        content: ""
-      });
-      return;
-    }
-    const content = await thread.content();
-    this.setState({loading: false, article: thread, content: content});
+    );
   }
 }
