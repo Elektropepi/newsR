@@ -1,32 +1,42 @@
 import React from "react";
-import {ArticleInterface} from "./Article";
-import {ArticleDetail} from "./ArticleDetail";
+import {ArticleId, ArticleInterface} from "./Article";
+import {CollapsibleThreadListEntry} from "./CollapsibleThreadListEntry";
 
 
 interface State {
+  forceShowIds: ArticleId[];
 }
 
 interface Props {
   articles: ArticleInterface[];
-  levelsToShow: number;
 }
 
 export class CollapsibleThreadList extends React.Component<Props, State> {
-  render() {
-    const {articles, levelsToShow} = this.props;
+  state: Readonly<State> = {
+    forceShowIds: []
+  };
 
-    if (articles.length < 1 || levelsToShow === 0) {
-      return null;
+  handleArticleClick(articleId: ArticleId) {
+    const {forceShowIds} = this.state;
+    if(forceShowIds.includes(articleId)) {
+      forceShowIds.splice(forceShowIds.indexOf(articleId))
+    } else {
+      forceShowIds.push(articleId);
     }
+    this.setState({forceShowIds: forceShowIds});
+  }
+
+  render() {
+    const {articles} = this.props;
+    const {forceShowIds} = this.state;
 
     return (
-      <div>
+      <div className="collapsible-thread-list">
         <ul>
           {articles.map(article =>
-            <li key={article.id}>
-              <ArticleDetail article={article} showContent={levelsToShow > 1}/>
-              <CollapsibleThreadList articles={article.followUps} levelsToShow={levelsToShow - 1}/>
-            </li>)}
+            <CollapsibleThreadListEntry key={article.id} article={article}
+                                        showContent={forceShowIds.includes(article.id)}
+                                        onClick={id => this.handleArticleClick(id)} />)}
         </ul>
       </div>
     )

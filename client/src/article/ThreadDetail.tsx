@@ -33,8 +33,8 @@ export class ThreadDetail extends React.Component<Props, State> {
         <Helmet>
           <title>newsR - {article?.subject}</title>
         </Helmet>
-        <ArticleDetail article={article} showContent={true}/>
-        <CollapsibleThreadList articles={article?.followUps} levelsToShow={2}/>
+        <ArticleDetail article={article} showContent={true} />
+        <CollapsibleThreadList articles={article?.followUps} />
       </div>
     )
   }

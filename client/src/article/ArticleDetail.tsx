@@ -1,11 +1,16 @@
-import {ArticleInterface} from "./Article";
+import {ArticleId, ArticleInterface} from "./Article";
 import React from "react";
 import {Loading} from "../template/Loading";
 
 interface Props {
   article: ArticleInterface,
-  showContent: boolean
+  showContent: boolean,
+  onClickHeader: ((id: ArticleId) => void) | null
 }
+
+const defaultProps: Partial<Props> = {
+  onClickHeader: null
+};
 
 interface State {
   content: string,
@@ -13,6 +18,7 @@ interface State {
 }
 
 export class ArticleDetail extends React.Component<Props, State> {
+  static defaultProps: Partial<Props>;
   state: Readonly<State> = {
     isContentLoading: false,
     content: ""
@@ -38,12 +44,12 @@ export class ArticleDetail extends React.Component<Props, State> {
   }
 
   render() {
-    const {article, showContent} = this.props;
+    const {article, showContent, onClickHeader} = this.props;
     const {content, isContentLoading} = this.state;
     return (
       <div className="article-detail">
-        <div className="header">
-          <h1>{article.subject}</h1>
+        <div className="header" onClick={() => onClickHeader && onClickHeader(article.id)}>
+          <h1 className="article-detail-title">{article.subject}</h1>
           <p className="article-detail-author">
             {article.date.format("DD.MM.YYYY")} by {article.author.name} ({article.author.email})
           </p>
@@ -56,3 +62,5 @@ export class ArticleDetail extends React.Component<Props, State> {
     );
   }
 }
+
+ArticleDetail.defaultProps = defaultProps;
