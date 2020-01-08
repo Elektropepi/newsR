@@ -21,7 +21,7 @@ export class CollapsibleThreadListEntry extends React.Component<Props, State> {
       <li key={article.id}>
         <ArticleDetail article={article} showContent={showContent} onClickHeader={id => onClick(id)}/>
         {showContent && <div>
-          <CollapsibleThreadList articles={article.followUps} />
+          <CollapsibleThreadList articles={article.followUps}/>
           <div className="collapsible-line" onClick={() => onClick(article.id)}/>
         </div>}
       </li>

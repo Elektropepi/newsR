@@ -18,7 +18,7 @@ export class CollapsibleThreadList extends React.Component<Props, State> {
 
   handleArticleClick(articleId: ArticleId) {
     const {forceShowIds} = this.state;
-    if(forceShowIds.includes(articleId)) {
+    if (forceShowIds.includes(articleId)) {
       forceShowIds.splice(forceShowIds.indexOf(articleId))
     } else {
       forceShowIds.push(articleId);
@@ -36,7 +36,7 @@ export class CollapsibleThreadList extends React.Component<Props, State> {
           {articles.map(article =>
             <CollapsibleThreadListEntry key={article.id} article={article}
                                         showContent={forceShowIds.includes(article.id)}
-                                        onClick={id => this.handleArticleClick(id)} />)}
+                                        onClick={id => this.handleArticleClick(id)}/>)}
         </ul>
       </div>
     )

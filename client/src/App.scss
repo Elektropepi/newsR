@@ -80,16 +80,25 @@ $footerHeight: 0rem;
       .article-detail-content {
         padding: 1rem;
         font-size: 1.3rem;
+
+        .nested-content {
+          margin-left: 1rem;
+          border-left: solid #99A3CC 0.15rem;
+          padding-left: 0.5rem;
+        }
       }
     }
+
     .collapsible-thread-list {
       .header {
         padding: 0.5rem;
         cursor: pointer;
       }
+
       .article-detail-title {
         font-size: 1.5rem;
       }
+
       .collapsible-line {
         position: absolute;
         width: 0.3rem;

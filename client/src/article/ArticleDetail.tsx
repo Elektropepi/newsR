@@ -1,6 +1,7 @@
 import {ArticleId, ArticleInterface} from "./Article";
-import React from "react";
+import React, {ReactNode} from "react";
 import {Loading} from "../template/Loading";
+import {ContentInterface} from "./Content";
 
 interface Props {
   article: ArticleInterface,
@@ -13,7 +14,7 @@ const defaultProps: Partial<Props> = {
 };
 
 interface State {
-  content: string,
+  contents: ContentInterface[],
   isContentLoading: boolean
 }
 
@@ -21,7 +22,7 @@ export class ArticleDetail extends React.Component<Props, State> {
   static defaultProps: Partial<Props>;
   state: Readonly<State> = {
     isContentLoading: false,
-    content: ""
+    contents: []
   };
 
   async componentDidMount() {
@@ -38,14 +39,21 @@ export class ArticleDetail extends React.Component<Props, State> {
     if (!this.props.showContent) {
       return;
     }
-    this.setState({isContentLoading: true, content: ""});
-    const content = await this.props.article.content();
-    this.setState({isContentLoading: false, content: content});
+    this.setState({isContentLoading: true, contents: []});
+    const contents = await this.props.article.contents();
+    this.setState({isContentLoading: false, contents: contents});
+  }
+
+  private nestContent(level: number, text: string): ReactNode {
+    if (level === 0) {
+      return text;
+    }
+    return <div className="nested-content">{this.nestContent(level - 1, text)}</div>;
   }
 
   render() {
     const {article, showContent, onClickHeader} = this.props;
-    const {content, isContentLoading} = this.state;
+    const {contents, isContentLoading} = this.state;
     return (
       <div className="article-detail">
         <div className="header" onClick={() => onClickHeader && onClickHeader(article.id)}>
@@ -55,9 +63,12 @@ export class ArticleDetail extends React.Component<Props, State> {
           </p>
         </div>
         {isContentLoading && <Loading/>}
-        {showContent && <p className="article-detail-content">
-          {content}
-        </p>}
+        {showContent && <div className="article-detail-content">
+          {contents.map((content, index) =>
+            <div key={index}>
+              {this.nestContent(content.citationLevel, content.text)}
+            </div>)}
+        </div>}
       </div>
     );
   }
