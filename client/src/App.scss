@@ -5,6 +5,7 @@ $paper: #F4F4F4;
 $charcoal: #373737;
 
 $headerBg: $paleGold;
+$subHeaderBg: darken($silk, 7%);
 $headerFontColor: $paper;
 $sidebarBg: $paper;
 $fontColor: $charcoal;
@@ -42,7 +43,7 @@ $footerHeight: 0rem;
 
   .header {
     color: lighten($paper, 30%);
-    background: darken($silk, 7%);
+    background: $subHeaderBg;
     padding: 1rem;
   }
 
@@ -66,17 +67,54 @@ $footerHeight: 0rem;
     }
   }
 
-  .article-detail {
-    // show \n as breaks: https://stackoverflow.com/a/44413780/2306363
-    white-space: pre-line;
+  .thread-detail {
 
-    .article-detail-author {
-      font-size: 0.9rem;
+    .article-detail {
+      // show \n as breaks: https://stackoverflow.com/a/44413780/2306363
+      white-space: pre-line;
+
+      .article-detail-author {
+        font-size: 0.9rem;
+      }
+
+      .article-detail-content {
+        padding: 1rem;
+        font-size: 1.3rem;
+
+        .nested-content {
+          margin-left: 1rem;
+          border-left: solid #99A3CC 0.15rem;
+          padding-left: 0.5rem;
+        }
+      }
     }
 
-    .article-detail-content {
-      padding: 1rem;
-      font-size: 1.3rem;
+    .collapsible-thread-list {
+      .header {
+        padding: 0.5rem;
+        cursor: pointer;
+      }
+
+      .article-detail-title {
+        font-size: 1.5rem;
+      }
+
+      .collapsible-line {
+        position: absolute;
+        width: 0.3rem;
+        cursor: pointer;
+        top: 0;
+        bottom: 0;
+        background: $subHeaderBg;
+      }
+    }
+
+    li {
+      position: relative;
+    }
+
+    ul {
+      list-style-type: none;
     }
   }
 
@@ -121,6 +159,7 @@ $footerHeight: 0rem;
       color: white;
       position: sticky;
       top: 0;
+      z-index: 10;
     }
 
     .app-grid-body {

@@ -1,31 +1,28 @@
-import React from "react";
-import {Article, ArticleId} from "./Article";
-import {RouteComponentProps} from "react-router-dom";
-import {Group} from "../group/Group";
+import {ArticleId, ArticleInterface} from "./Article";
+import React, {ReactNode} from "react";
 import {Loading} from "../template/Loading";
-import {Helmet} from "react-helmet";
+import {ContentInterface} from "./Content";
 
+interface Props {
+  article: ArticleInterface,
+  showContent: boolean,
+  onClickHeader: ((id: ArticleId) => void) | null
+}
+
+const defaultProps: Partial<Props> = {
+  onClickHeader: null
+};
 
 interface State {
-  loading: boolean;
-  article: Article | null;
-  content: string
-}
-
-interface ArticleDetailRouteParams {
-  id: ArticleId;
-}
-
-interface Props extends RouteComponentProps<ArticleDetailRouteParams> {
-  group: Group;
+  contents: ContentInterface[],
+  isContentLoading: boolean
 }
 
 export class ArticleDetail extends React.Component<Props, State> {
-
+  static defaultProps: Partial<Props>;
   state: Readonly<State> = {
-    loading: true,
-    article: null,
-    content: ""
+    isContentLoading: false,
+    contents: []
   };
 
   async componentDidMount() {
@@ -33,54 +30,48 @@ export class ArticleDetail extends React.Component<Props, State> {
   }
 
   async componentDidUpdate(prevProps: Props) {
-    if (this.props.match.params.id !== prevProps.match.params.id) {
+    if (this.props.article !== prevProps.article || this.props.showContent !== prevProps.showContent) {
       this.loadContent();
     }
   }
 
+  private async loadContent() {
+    if (!this.props.showContent) {
+      return;
+    }
+    this.setState({isContentLoading: true, contents: []});
+    const contents = await this.props.article.contents();
+    this.setState({isContentLoading: false, contents: contents});
+  }
+
+  private nestContent(level: number, text: string): ReactNode {
+    if (level === 0) {
+      return text;
+    }
+    return <div className="nested-content">{this.nestContent(level - 1, text)}</div>;
+  }
+
   render() {
-    const {article, loading, content} = this.state;
-    if (loading) {
-      return (<Loading/>);
-    }
-
-    if (article === null) {
-      return "Article not found!";
-    }
-
+    const {article, showContent, onClickHeader} = this.props;
+    const {contents, isContentLoading} = this.state;
     return (
       <div className="article-detail">
-        <Helmet>
-          <title>newsR - {article?.subject}</title>
-        </Helmet>
-        <div className="header">
-          <h1>{article.subject}</h1>
+        <div className="header" onClick={() => onClickHeader && onClickHeader(article.id)}>
+          <h1 className="article-detail-title">{article.subject}</h1>
           <p className="article-detail-author">
             {article.date.format("DD.MM.YYYY")} by {article.author.name} ({article.author.email})
           </p>
         </div>
-        <p className="article-detail-content">
-          {content}
-        </p>
+        {isContentLoading && <Loading/>}
+        {showContent && <div className="article-detail-content">
+          {contents.map((content, index) =>
+            <div key={index}>
+              {this.nestContent(content.citationLevel, content.text)}
+            </div>)}
+        </div>}
       </div>
-    )
-  }
-
-  private async loadContent() {
-    this.setState({loading: true});
-    // FIXME: cache result of threads() somewhere. Can't call newsieClient.article() because
-    // here I need the followUp structure that's constructed in threads()
-    const threads = await this.props.group.threads();
-    const thread = threads.find(thread => thread.id === this.props.match.params.id);
-    if (thread === undefined) {
-      this.setState({
-        loading: false,
-        article: null,
-        content: ""
-      });
-      return;
-    }
-    const content = await thread.content();
-    this.setState({loading: false, article: thread, content: content});
+    );
   }
 }
+
+ArticleDetail.defaultProps = defaultProps;
