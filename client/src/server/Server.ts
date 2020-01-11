@@ -17,6 +17,7 @@ class WsConnection {
   constructor(host: string, port: number, tlsPort: boolean, tlsOptions: any) {
     // todo: not sure if this should be here or in .connect()
     // todo: make websocket url configurable.
+    // for deployment, change to "ws://newsr-ws2nntp.herokuapp.com:80"
     this._socket = new WebSocket(`ws://${window.location.hostname}:8080`);
     this._host = host;
     this._port = port;
