@@ -20,6 +20,7 @@ const server = new WebSocket.Server({
 server.on('connection', function connection(ws) {
   let newsie;
 
+  let previousCommand = '';
   ws.on('message', async function incoming(message) {
     if (message.startsWith('NNTPCONNECT')) {
       const messageSplit = message.split(" ");
@@ -45,6 +46,11 @@ server.on('connection', function connection(ws) {
         arguments = message.slice(foundCommand.length).trim().split(' ');
       }
       newsie.command(foundCommand, ...arguments).then((data) => {
+        ws.send(JSON.stringify(data));
+      });
+      previousCommand = foundCommand;
+    } else if (previousCommand === Command.POST) {
+      newsie.sendData(Command.POST_SEND, message).then((data) => {
         ws.send(JSON.stringify(data));
       });
     }
