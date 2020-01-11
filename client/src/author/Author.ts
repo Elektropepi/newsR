@@ -26,4 +26,8 @@ export class Author implements AuthorInterface {
     }
     return new Author(name, email);
   }
+
+  public toString(): string {
+    return `${this.name} <${this.email}>`;
+  }
 }

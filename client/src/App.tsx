@@ -3,6 +3,7 @@ import './App.scss';
 import {GroupDetail} from "./group/GroupDetail";
 import {Route, Switch} from "react-router-dom"
 import {Root} from "./startPage/Root";
+import {Post} from "./post/Post";
 
 
 export default class App extends React.Component {
@@ -11,6 +12,7 @@ export default class App extends React.Component {
       <div className="app">
         <Switch>
           <Route path="/groups/:name" component={GroupDetail}/>
+          <Route path="/post/" component={Post}/>
           <Route path="/" component={Root}/>
         </Switch>
       </div>

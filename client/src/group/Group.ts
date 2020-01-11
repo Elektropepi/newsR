@@ -1,5 +1,6 @@
 import Newsie from 'newsie';
 import moment from "moment";
+import {Article as NewsieArticle} from "newsie";
 import {Author} from "../author/Author";
 import {Article, ArticleInterface} from "../article/Article";
 
@@ -36,7 +37,7 @@ export class Group implements GroupInterface {
       .map((a: any) => {
         const date = moment(a.headers.DATE);
         const author = Author.authorFromString(a.headers.FROM);
-        const article = new Article(a.headers['MESSAGE-ID'], a.headers.SUBJECT, date, author, this.newsieClient);
+        const article = new Article(a.headers['MESSAGE-ID'], a.headers.SUBJECT, date, author, this, this.newsieClient);
         article.setReferences(a.headers.REFERENCES);
         return article;
       });
@@ -54,5 +55,35 @@ export class Group implements GroupInterface {
     });
     threads.sort((a: Article, b: Article) => b.date.unix() - a.date.unix());
     return threads;
+  }
+
+  public async post(author: Author, subject: string, body: string[], references?: string[]): Promise<void> {
+    const initialResponse = await this.newsieClient.post();
+    if (initialResponse.code !== 340) {
+      // todo: display error..
+      const errorMsg = "Cannot post: Posting not permitted";
+      console.error(errorMsg);
+      throw new Error(errorMsg);
+    }
+
+    const article: NewsieArticle = {
+      headers: {
+        From: author.toString(),
+        Newsgroups: this.name,
+        Subject: subject,
+      },
+      body: body
+    };
+    if (references && article.headers) {
+      article.headers.References = references.join(' ');
+    }
+
+    const postResponse = await initialResponse.send(article);
+    if (postResponse.code !== 240) {
+      // todo: display error..
+      const errorMsg = "Posting failed: Posting failed";
+      console.error(errorMsg);
+      throw new Error(errorMsg);
+    }
   }
 }
