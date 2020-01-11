@@ -18,8 +18,6 @@ server.on('connection', function connection(ws) {
   let newsie;
 
   ws.on('message', async function incoming(message) {
-    console.log('received: %s', message);
-
     if (message.startsWith('NNTPCONNECT')) {
       const messageSplit = message.split(" ");
       newsie = new Newsie({
@@ -39,12 +37,9 @@ server.on('connection', function connection(ws) {
         // todo: return error via websocket
         throw Error('No connection to NNTP server, call NNTPCONNECT with host and port first.');
       }
-      console.log('foundCommand', foundCommand);
-      // todo: deal with multiple arguments...
       let arguments = [];
       if (foundCommand.length !== message.trim().length) {
         arguments = message.slice(foundCommand.length).trim().split(' ');
-        console.log(arguments);
       }
       newsie.command(foundCommand, ...arguments).then((data) => {
         ws.send(JSON.stringify(data));
