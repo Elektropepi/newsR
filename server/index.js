@@ -10,8 +10,11 @@ function findCommand(str) {
   }).sort((a, b) => b.length - a.length)[0];
 }
 
+const port = process.env.PORT || 8080;
+console.log('Starting with port: ' + port);
+
 const server = new WebSocket.Server({
-  port: 8080,
+  port: port
 });
 
 server.on('connection', function connection(ws) {
