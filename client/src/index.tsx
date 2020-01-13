@@ -2,17 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
-import {BrowserRouter} from 'react-router-dom'
+import {HashRouter} from 'react-router-dom'
 import * as serviceWorker from './serviceWorker';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {faHome, faSpinner} from '@fortawesome/free-solid-svg-icons'
 
 library.add(faSpinner);
-library.add(faHome)
+library.add(faHome);
 ReactDOM.render(
-  <BrowserRouter>
+  <HashRouter basename={process.env.REACT_APP_BASE_URL}>
     <App/>
-  </BrowserRouter>,
+  </HashRouter>,
   document.getElementById('root')
 );
 
