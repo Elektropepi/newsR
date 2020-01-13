@@ -13,11 +13,13 @@ import {Article} from "../article/Article";
 import {List} from "../template/List";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Helmet} from "react-helmet";
+import {addReadArticle, getReadArticles} from "../localStorage/localStorage";
 
 interface State {
   loading: boolean;
   group: Group | null;
   threads: Article[];
+  readArticles: string[];
 }
 
 export interface GroupRouteParams {
@@ -29,7 +31,8 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
   state: Readonly<State> = {
     loading: true,
     group: null,
-    threads: []
+    threads: [],
+    readArticles: []
   };
 
   async componentDidMount(): Promise<void> {
@@ -43,7 +46,8 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
       return;
     }
     const threads = await group.threads();
-    this.setState({loading: false, group, threads});
+    const readArticles = getReadArticles(group.name);
+    this.setState({loading: false, group, threads, readArticles});
   }
 
   render() {
@@ -61,7 +65,12 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
     const articleListData = threads.map(article => ({
       title: article.subject,
       subtitle: `${article.author.name} - ${article.date.format('DD.MM.YY')}`,
-      url: `${match.url}/${article.id}`
+      url: `${match.url}/${article.id}`,
+      bold: !this.state.readArticles.find(a => a === article.id),
+      onPress: () => {
+        addReadArticle(group.name, article.id);
+        this.setState({...this.state, readArticles: this.state.readArticles.concat(article.id)})
+      }
     }));
 
     return (
