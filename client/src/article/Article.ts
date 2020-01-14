@@ -2,6 +2,7 @@ import {Moment} from "moment";
 import Newsie from 'newsie';
 import {Author} from "../author/Author";
 import {Content} from "./Content";
+import {Group} from "../group/Group";
 
 export type ArticleId = string;
 
@@ -23,14 +24,16 @@ export class Article implements ArticleInterface {
   public references: ArticleId[] = [];
   public directReference: ArticleId = '';
   public followUps: ArticleInterface[] = [];
+  private group: Group;
   private readonly newsieClient: Newsie;
   private static readonly whitespaceRegex = new RegExp(/^$|\s+/);
 
-  constructor(id: string, subject: string, date: Moment, author: Author, newsieClient: Newsie) {
+  constructor(id: string, subject: string, date: Moment, author: Author, group: Group, newsieClient: Newsie) {
     this.id = id;
     this.subject = subject;
     this.date = date;
     this.author = author;
+    this.group = group;
     this.newsieClient = newsieClient;
   }
 
@@ -98,5 +101,9 @@ export class Article implements ArticleInterface {
     const contents = Article.bodyToContents(article.article.body);
     Article.stripStartEndCitationsFromContents(contents);
     return contents;
+  }
+
+  public async postFollowup(author: Author, subject: string, body: string[]): Promise<void> {
+    await this.group.post(author, subject, body, this.references.concat(this.id));
   }
 }

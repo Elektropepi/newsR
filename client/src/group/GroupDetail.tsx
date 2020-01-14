@@ -113,7 +113,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
                                       article={threads.find(thread => thread.id === props.match.params.id) || null}/>
                       }/>
                       <Route path={`${match.path}`}>
-                        <h3>Please select a thread</h3>
+                        <h3>Please select a thread or <Link to="/post/">Write</Link></h3>
                       </Route>
                     </Switch>
                   }/>
