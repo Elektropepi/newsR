@@ -64,7 +64,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
 
     const articleListData = threads.map(article => ({
       title: article.subject,
-      subtitle: `${article.author.name} - ${article.date.format('DD.MM.YY')}`,
+      subtitle: `${article.author.name} - ${article.date.format('DD.MM.YY HH:mm')}`,
       url: `${match.url}/${article.id}`,
       bold: !this.state.readArticles.find(a => a === article.id),
       onPress: () => {

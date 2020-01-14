@@ -60,7 +60,7 @@ export class ArticleDetail extends React.Component<Props, State> {
         <div className="header" onClick={() => onClickHeader && onClickHeader(article.id)}>
           <h1 className="article-detail-title">{article.subject}</h1>
           <p className="article-detail-author">
-            {article.date.format("DD.MM.YYYY")} by {article.author.name}
+            {article.date.format("DD.MM.YYYY HH:mm")} by {article.author.name}
             &nbsp;(<a href={`mailto:${article.author.email}`}>{article.author.email}</a>)
             &nbsp;<Link to="/post/">Followup</Link>
           </p>
