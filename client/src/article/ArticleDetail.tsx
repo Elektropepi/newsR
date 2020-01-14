@@ -84,7 +84,12 @@ export class ArticleDetail extends React.Component<Props, State> {
                     href={attachment.dataUrl}
                     download={attachment.contentType.params.name}
                   >
-                    {attachment.contentType.params.name}
+                    {['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'].includes(attachment.contentType.value) ? (
+                      <img src={attachment.dataUrl} style={{width: "100%"}} />
+                      ) : (
+                      <span>{attachment.contentType.params.name}</span>
+                      )
+                    }
                   </a>
                 </li>)}
             </ul>
