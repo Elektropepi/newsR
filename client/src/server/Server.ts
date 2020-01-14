@@ -16,9 +16,10 @@ class WsConnection {
   // todo: type tlsOptions: TlsOptions
   constructor(host: string, port: number, tlsPort: boolean, tlsOptions: any) {
     // todo: not sure if this should be here or in .connect()
-    // todo: make websocket url configurable.
-    // for deployment, change to "ws://newsr-ws2nntp.herokuapp.com:80"
-    this._socket = new WebSocket(`ws://${window.location.hostname}:8080`);
+    if(!process.env.REACT_APP_WS_TO_NNTP_URL) {
+      throw Error("WS_TO_NNTP_URL is not defined!");
+    }
+    this._socket = new WebSocket(process.env.REACT_APP_WS_TO_NNTP_URL);
     this._host = host;
     this._port = port;
     this._queue = [];

@@ -1,7 +1,7 @@
 import {ArticleId, ArticleInterface} from "./Article";
 import React, {ReactNode} from "react";
 import {Loading} from "../template/Loading";
-import {ContentInterface} from "./Content";
+import {Content} from "./Content";
 import {Link} from "react-router-dom";
 
 interface Props {
@@ -15,7 +15,7 @@ const defaultProps: Partial<Props> = {
 };
 
 interface State {
-  contents: ContentInterface[],
+  contents: Content[],
   isContentLoading: boolean
 }
 
@@ -69,7 +69,7 @@ export class ArticleDetail extends React.Component<Props, State> {
         {showContent && <div className="article-detail-content">
           {contents.map((content, index) =>
             <div key={index}>
-              {this.nestContent(content.citationLevel, content.text)}
+              {this.nestContent(content.citationLevel, content.text + "\n")}
             </div>)}
         </div>}
       </div>

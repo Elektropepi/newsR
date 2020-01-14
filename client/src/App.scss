@@ -45,6 +45,15 @@ $footerHeight: 0rem;
     color: lighten($paper, 30%);
     background: $subHeaderBg;
     padding: 1rem;
+    a {
+      &:link {
+        color: inherit;
+      }
+
+      &:visited {
+        color: inherit;
+      }
+    }
   }
 
   .list-entry {
@@ -64,6 +73,10 @@ $footerHeight: 0rem;
 
     .subtitle {
       font-size: 0.9rem;
+    }
+
+    .bold {
+      font-weight: bold;
     }
   }
 
@@ -133,6 +146,7 @@ $footerHeight: 0rem;
 
     .sidebar-content-content {
       grid-area: content;
+      overflow-y: auto;
     }
   }
 
