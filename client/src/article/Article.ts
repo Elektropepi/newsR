@@ -3,6 +3,7 @@ import Newsie from 'newsie';
 import {Author} from "../author/Author";
 import {Content} from "./Content";
 import {Group} from "../group/Group";
+import {GroupCache} from "../group/GroupCache";
 
 export type ArticleId = string;
 
@@ -79,8 +80,12 @@ export class Article implements ArticleInterface {
     }
   }
 
-  private static bodyToContents(body: string[]): Content[] {
+  private static bodyToContents(body: string[] | undefined): Content[] {
     const contents: Content[] = [];
+
+    if (!body) {
+      return contents;
+    }
 
     body.forEach((line: string) => {
       let citationLevel = 0;
@@ -94,11 +99,19 @@ export class Article implements ArticleInterface {
   }
 
   public async contents(): Promise<Content[]> {
-    const article = await this.newsieClient.body(this.id);
-    if (!article.article.body) {
-      return [];
+    const groupCache = await GroupCache.instance();
+    let article = await groupCache.retrieveBody(this.group.host, this.id);
+    if (!article) {
+      article = (await this.newsieClient.body(this.id)).article;
+      if (article.body) {
+        await groupCache.persistBody(this.group.host, article);
+      } else {
+        article.body = [
+          '[newsR: content not found and not cached]'
+        ]
+      }
     }
-    const contents = Article.bodyToContents(article.article.body);
+    const contents = Article.bodyToContents(article.body);
     Article.stripStartEndCitationsFromContents(contents);
     return contents;
   }
