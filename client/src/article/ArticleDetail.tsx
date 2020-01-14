@@ -74,7 +74,7 @@ export class ArticleDetail extends React.Component<Props, State> {
             <div key={index}>
               {this.nestContent(content.citationLevel, content.text + "\n")}
             </div>)}
-          {attachments &&
+          {attachments.length > 0 &&
           <div>
             <p>Attachments:</p>
             <ul>

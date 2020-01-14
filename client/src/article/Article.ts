@@ -59,8 +59,8 @@ export class Article implements ArticleInterface {
     const firstContent = contents[0];
     if(firstContent.isCitationStart()) {
       let nextRootIndex = 1;
-      while(nextRootIndex < contents.length && contents[nextRootIndex].citationLevel !== 0 ||
-          Article.isOnlyWhitespace(contents[nextRootIndex].text)) {
+      while((nextRootIndex < contents.length && contents[nextRootIndex].citationLevel !== 0) ||
+      contents[nextRootIndex].text.length === 0) {
         nextRootIndex++;
       }
       contents.splice(0, nextRootIndex);
