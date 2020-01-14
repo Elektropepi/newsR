@@ -5,6 +5,8 @@ export function List<T extends {
   url: string
   title: string
   subtitle?: string
+  bold?: boolean
+  onPress?: () => void
 }>(props: {
   data: T[]
 }) {
