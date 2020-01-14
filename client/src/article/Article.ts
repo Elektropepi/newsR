@@ -18,6 +18,7 @@ export interface ArticleInterface {
 
 export class Article implements ArticleInterface {
   public readonly id: ArticleId;
+  public readonly number: number;
   public readonly subject: string;
   public readonly date: Moment;
   public readonly author: Author;
@@ -28,8 +29,9 @@ export class Article implements ArticleInterface {
   private readonly newsieClient: Newsie;
   private static readonly whitespaceRegex = new RegExp(/^$|\s+/);
 
-  constructor(id: string, subject: string, date: Moment, author: Author, group: Group, newsieClient: Newsie) {
+  constructor(id: string, number: number, subject: string, date: Moment, author: Author, group: Group, newsieClient: Newsie) {
     this.id = id;
+    this.number = number;
     this.subject = subject;
     this.date = date;
     this.author = author;

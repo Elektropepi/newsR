@@ -65,7 +65,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
     const articleListData = threads.map(article => ({
       title: article.subject,
       subtitle: `${article.author.name} - ${article.date.format('DD.MM.YY HH:mm')}`,
-      url: `${match.url}/${article.id}`,
+      url: `${match.url}/${article.number}`,
       bold: !this.state.readArticles.find(a => a === article.id),
       onPress: () => {
         addReadArticle(group.name, article.id);
@@ -95,9 +95,10 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
               screenIsSmall => screenIsSmall
                 ?
                 <Switch>
-                  <Route path={`${match.path}/:id`} render={props =>
+                  <Route path={`${match.path}/:number`} render={props =>
                     <ThreadDetail {...props} group={group}
-                                  article={threads.find(thread => thread.id === props.match.params.id) || null}/>
+                                  article={threads.find(thread => thread.number === parseInt(props.match.params.number))
+                                    || null}/>
                   }/>
                   <Route path={`${match.path}`}>
                     <List data={articleListData}/>
@@ -108,9 +109,10 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
                   sidebar={<List data={articleListData}/>}
                   content={
                     <Switch>
-                      <Route path={`${match.path}/:id`} render={props =>
+                      <Route path={`${match.path}/:number`} render={props =>
                         <ThreadDetail {...props} group={group}
-                                      article={threads.find(thread => thread.id === props.match.params.id) || null}/>
+                                      article={threads.find(thread => thread.number === parseInt(props.match.params.number))
+                                        || null}/>
                       }/>
                       <Route path={`${match.path}`}>
                         <h3>Please select a thread or <Link to="/post/">Write</Link></h3>
