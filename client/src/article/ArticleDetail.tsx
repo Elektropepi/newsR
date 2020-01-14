@@ -1,5 +1,6 @@
 import {ArticleId, ArticleInterface} from "./Article";
 import React, {ReactNode} from "react";
+import {decode} from "emailjs-mime-codec";
 import {Loading} from "../template/Loading";
 import {Content} from "./Content";
 import {Link} from "react-router-dom";
@@ -16,6 +17,7 @@ const defaultProps: Partial<Props> = {
 
 interface State {
   contents: Content[],
+  attachments: any[],
   isContentLoading: boolean
 }
 
@@ -23,7 +25,8 @@ export class ArticleDetail extends React.Component<Props, State> {
   static defaultProps: Partial<Props>;
   state: Readonly<State> = {
     isContentLoading: false,
-    contents: []
+    contents: [],
+    attachments: []
   };
 
   async componentDidMount() {
@@ -40,9 +43,9 @@ export class ArticleDetail extends React.Component<Props, State> {
     if (!this.props.showContent) {
       return;
     }
-    this.setState({isContentLoading: true, contents: []});
+    this.setState({isContentLoading: true, contents: [], attachments: []});
     const contents = await this.props.article.contents();
-    this.setState({isContentLoading: false, contents: contents});
+    this.setState({isContentLoading: false, contents: contents.text, attachments: contents.attachments});
   }
 
   private nestContent(level: number, text: string): ReactNode {
@@ -54,7 +57,7 @@ export class ArticleDetail extends React.Component<Props, State> {
 
   render() {
     const {article, showContent, onClickHeader} = this.props;
-    const {contents, isContentLoading} = this.state;
+    const {contents, attachments, isContentLoading} = this.state;
     return (
       <div className="article-detail">
         <div className="header" onClick={() => onClickHeader && onClickHeader(article.id)}>
@@ -71,6 +74,22 @@ export class ArticleDetail extends React.Component<Props, State> {
             <div key={index}>
               {this.nestContent(content.citationLevel, content.text + "\n")}
             </div>)}
+          {attachments &&
+          <div>
+            <p>Attachments:</p>
+            <ul>
+              {attachments.map((attachment) =>
+                <li key={attachment.contentType.params.name}>
+                  <a
+                    href={attachment.dataUrl}
+                    download={attachment.contentType.params.name}
+                  >
+                    {attachment.contentType.params.name}
+                  </a>
+                </li>)}
+            </ul>
+          </div>
+          }
         </div>}
       </div>
     );

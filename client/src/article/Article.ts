@@ -1,5 +1,6 @@
 import {Moment} from "moment";
 import Newsie from 'newsie';
+import parse from "emailjs-mime-parser";
 import {Author} from "../author/Author";
 import {Content} from "./Content";
 import {Group} from "../group/Group";
@@ -13,7 +14,7 @@ export interface ArticleInterface {
   author: Author,
   followUps: ArticleInterface[]
 
-  contents(): Promise<Content[]>,
+  contents(): Promise<{text: Content[], attachments: any[]}>,
 }
 
 export class Article implements ArticleInterface {
@@ -58,7 +59,8 @@ export class Article implements ArticleInterface {
     const firstContent = contents[0];
     if(firstContent.isCitationStart()) {
       let nextRootIndex = 1;
-      while(nextRootIndex < contents.length && contents[nextRootIndex].citationLevel !== 0) {
+      while(nextRootIndex < contents.length && contents[nextRootIndex].citationLevel !== 0 ||
+          Article.isOnlyWhitespace(contents[nextRootIndex].text)) {
         nextRootIndex++;
       }
       contents.splice(0, nextRootIndex);
@@ -81,8 +83,30 @@ export class Article implements ArticleInterface {
     }
   }
 
-  private static bodyToContents(body: string[]): Content[] {
+  private static bodyToContents(body: string[]): {text: Content[], attachments: any[]} {
     const contents: Content[] = [];
+    let attachments = [];
+
+    if (body[0] === 'This is a multi-part message in MIME format.') {
+      const missingMimeHeader =
+        'MIME-Version: 1.0\n' +
+        `Content-Type: multipart/mixed; boundary=${body[1].substring(2)}\n` +
+        '\n';
+      const mimeInfo = parse(missingMimeHeader + body.join('\n'));
+      body = mimeInfo.childNodes
+        .filter((node: any) => node.contentType.value === 'text/plain')
+        .map((node: any) => new TextDecoder("utf-8").decode(node.content))
+        .join('\n')
+        .split('\n');
+      attachments = mimeInfo.childNodes
+        .filter((node: any) => node.contentType.value !== 'text/plain')
+        .map((node: any) => {
+          const base64 = node.raw.substring(node.raw.lastIndexOf('\n\n')).replace(/\s/g, "");
+          node.dataUrl = `data:${node.contentType.value};base64,${base64}`;
+          return node;
+        });
+      console.log('attachments', attachments);
+    }
 
     body.forEach((line: string) => {
       let citationLevel = 0;
@@ -92,17 +116,17 @@ export class Article implements ArticleInterface {
       line = line.substring(citationLevel, line.length);
       contents.push(new Content(line, citationLevel));
     });
-    return contents;
+    return {text: contents, attachments};
   }
 
-  public async contents(): Promise<Content[]> {
+  public async contents(): Promise<{text: Content[], attachments: any[]}> {
     const article = await this.newsieClient.body(this.id);
     if (!article.article.body) {
-      return [];
+      return {text: [], attachments: []};
     }
     const contents = Article.bodyToContents(article.article.body);
-    Article.stripStartEndCitationsFromContents(contents);
-    return contents;
+    Article.stripStartEndCitationsFromContents(contents.text);
+    return {text: contents.text, attachments: contents.attachments};
   }
 
   public async postFollowup(author: Author, subject: string, body: string[]): Promise<void> {

@@ -17,6 +17,7 @@
     "@types/react-helmet": "^5.0.15",
     "@types/react-router-dom": "^5.1.3",
     "emailjs-mime-codec": "^2.0.9",
+    "emailjs-mime-parser": "^2.0.7",
     "moment": "^2.24.0",
     "newsie": "^1.1.0",
     "node-sass": "^4.13.0",
