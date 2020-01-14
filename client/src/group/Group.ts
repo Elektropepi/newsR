@@ -1,6 +1,7 @@
 import Newsie from 'newsie';
 import moment from "moment";
 import {Article as NewsieArticle} from "newsie";
+import {mimeWordsDecode} from "emailjs-mime-codec";
 import {Author} from "../author/Author";
 import {Article, ArticleInterface} from "../article/Article";
 
@@ -36,8 +37,9 @@ export class Group implements GroupInterface {
     const articlesByNumber: Article[] = overview.articles
       .map((a: any) => {
         const date = moment(a.headers.DATE);
-        const author = Author.authorFromString(a.headers.FROM);
-        const article = new Article(a.headers['MESSAGE-ID'], a.headers.SUBJECT, date, author, this, this.newsieClient);
+        const author = Author.authorFromString(mimeWordsDecode(a.headers.FROM));
+        const article = new Article(a.headers['MESSAGE-ID'], mimeWordsDecode(a.headers.SUBJECT), date, author, this,
+          this.newsieClient);
         article.setReferences(a.headers.REFERENCES);
         return article;
       });
