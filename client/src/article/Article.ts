@@ -105,7 +105,6 @@ export class Article implements ArticleInterface {
           node.dataUrl = `data:${node.contentType.value};base64,${base64}`;
           return node;
         });
-      console.log('attachments', attachments);
     }
 
     body.forEach((line: string) => {
