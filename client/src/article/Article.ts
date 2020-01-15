@@ -11,12 +11,14 @@ export interface ArticleInterface {
   subject: string,
   date: Moment,
   author: Author,
-  followUps: ArticleInterface[]
+  followUps: ArticleInterface[],
+  number: number,
 
   contents(): Promise<Content[]>,
 }
 
 export class Article implements ArticleInterface {
+  private static readonly whitespaceRegex = new RegExp(/^$|\s+/);
   public readonly id: ArticleId;
   public readonly number: number;
   public readonly subject: string;
@@ -27,7 +29,6 @@ export class Article implements ArticleInterface {
   public followUps: ArticleInterface[] = [];
   private group: Group;
   private readonly newsieClient: Newsie;
-  private static readonly whitespaceRegex = new RegExp(/^$|\s+/);
 
   constructor(id: string, number: number, subject: string, date: Moment, author: Author, group: Group, newsieClient: Newsie) {
     this.id = id;
@@ -39,46 +40,38 @@ export class Article implements ArticleInterface {
     this.newsieClient = newsieClient;
   }
 
-  public setReferences(references: string) {
-    if (references.length <= 0) {
-      return;
-    }
-    this.references = references.split(' ');
-    this.directReference = this.references[this.references.length - 1];
-  }
-
-  private static isOnlyWhitespace(text: string): boolean {
-    return Article.whitespaceRegex.test(text);
-  }
-
   public static stripStartEndCitationsFromContents(contents: Content[]) {
-    if(contents.length < 1) {
+    if (contents.length < 1) {
       return;
     }
     const firstContent = contents[0];
-    if(firstContent.isCitationStart()) {
+    if (firstContent.isCitationStart()) {
       let nextRootIndex = 1;
-      while(nextRootIndex < contents.length && contents[nextRootIndex].citationLevel !== 0) {
+      while (nextRootIndex < contents.length && contents[nextRootIndex].citationLevel !== 0) {
         nextRootIndex++;
       }
       contents.splice(0, nextRootIndex);
     }
 
-    let citationIndex: number|null = null;
-    for(let i = contents.length - 1; i >= 0; i--) {
+    let citationIndex: number | null = null;
+    for (let i = contents.length - 1; i >= 0; i--) {
       const content = contents[i];
-      if(content.citationLevel === 0 && !Article.isOnlyWhitespace(content.text)) {
+      if (content.citationLevel === 0 && !Article.isOnlyWhitespace(content.text)) {
         break;
       }
-      if(content.isCitationStart()) {
+      if (content.isCitationStart()) {
         citationIndex = i;
         break;
       }
     }
 
-    if(citationIndex !== null) {
+    if (citationIndex !== null) {
       contents.splice(citationIndex, contents.length - citationIndex)
     }
+  }
+
+  private static isOnlyWhitespace(text: string): boolean {
+    return Article.whitespaceRegex.test(text);
   }
 
   private static bodyToContents(body: string[]): Content[] {
@@ -93,6 +86,14 @@ export class Article implements ArticleInterface {
       contents.push(new Content(line, citationLevel));
     });
     return contents;
+  }
+
+  public setReferences(references: string) {
+    if (references.length <= 0) {
+      return;
+    }
+    this.references = references.split(' ');
+    this.directReference = this.references[this.references.length - 1];
   }
 
   public async contents(): Promise<Content[]> {
