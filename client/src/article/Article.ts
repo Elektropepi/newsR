@@ -4,6 +4,7 @@ import parse from "emailjs-mime-parser";
 import {Author} from "../author/Author";
 import {Content} from "./Content";
 import {Group} from "../group/Group";
+import {Attachment} from "./Attachment";
 
 export type ArticleId = string;
 
@@ -14,7 +15,7 @@ export interface ArticleInterface {
   author: Author,
   followUps: ArticleInterface[]
 
-  contents(): Promise<{text: Content[], attachments: any[]}>,
+  contents(): Promise<{text: Content[], attachments: Attachment[]}>,
 }
 
 export class Article implements ArticleInterface {
@@ -83,9 +84,9 @@ export class Article implements ArticleInterface {
     }
   }
 
-  private static bodyToContents(body: string[]): {text: Content[], attachments: any[]} {
+  private static bodyToContents(body: string[]): {text: Content[], attachments: Attachment[]} {
     const contents: Content[] = [];
-    let attachments = [];
+    let attachments: Attachment[] = [];
 
     if (body[0] === 'This is a multi-part message in MIME format.') {
       const missingMimeHeader =
@@ -102,8 +103,11 @@ export class Article implements ArticleInterface {
         .filter((node: any) => node.contentType.value !== 'text/plain')
         .map((node: any) => {
           const base64 = node.raw.substring(node.raw.lastIndexOf('\n\n')).replace(/\s/g, "");
-          node.dataUrl = `data:${node.contentType.value};base64,${base64}`;
-          return node;
+          return {
+            contentType: node.contentType.value,
+            name: node.contentType.params.name,
+            dataUrl: `data:${node.contentType.value};base64,${base64}`
+          };
         });
     }
 
@@ -118,7 +122,7 @@ export class Article implements ArticleInterface {
     return {text: contents, attachments};
   }
 
-  public async contents(): Promise<{text: Content[], attachments: any[]}> {
+  public async contents(): Promise<{text: Content[], attachments: Attachment[]}> {
     const article = await this.newsieClient.body(this.id);
     if (!article.article.body) {
       return {text: [], attachments: []};

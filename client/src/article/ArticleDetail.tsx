@@ -1,9 +1,9 @@
 import {ArticleId, ArticleInterface} from "./Article";
 import React, {ReactNode} from "react";
-import {decode} from "emailjs-mime-codec";
 import {Loading} from "../template/Loading";
 import {Content} from "./Content";
 import {Link} from "react-router-dom";
+import {Attachment} from "./Attachment";
 
 interface Props {
   article: ArticleInterface,
@@ -17,7 +17,7 @@ const defaultProps: Partial<Props> = {
 
 interface State {
   contents: Content[],
-  attachments: any[],
+  attachments: Attachment[],
   isContentLoading: boolean
 }
 
@@ -79,15 +79,15 @@ export class ArticleDetail extends React.Component<Props, State> {
             <p>Attachments:</p>
             <ul>
               {attachments.map((attachment) =>
-                <li key={attachment.contentType.params.name}>
+                <li key={attachment.name}>
                   <a
                     href={attachment.dataUrl}
-                    download={attachment.contentType.params.name}
+                    download={attachment.name}
                   >
-                    {['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'].includes(attachment.contentType.value) ? (
-                      <img src={attachment.dataUrl} style={{width: "100%"}} />
+                    {['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'].includes(attachment.contentType) ? (
+                      <img src={attachment.dataUrl} style={{width: "100%"}}  alt={attachment.name} />
                       ) : (
-                      <span>{attachment.contentType.params.name}</span>
+                      <span>{attachment.name}</span>
                       )
                     }
                   </a>
