@@ -16,6 +16,10 @@ $footerHeight: 0rem;
 .app {
   color: $fontColor;
 
+  .icon-button {
+    cursor: pointer;
+  }
+
   .loading {
     padding: 1rem;
   }
@@ -45,6 +49,7 @@ $footerHeight: 0rem;
     color: lighten($paper, 30%);
     background: $subHeaderBg;
     padding: 1rem;
+
     a {
       &:link {
         color: inherit;
@@ -100,6 +105,15 @@ $footerHeight: 0rem;
           padding-left: 0.5rem;
         }
       }
+
+      .article-button {
+        margin-left: 1rem;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+      }
     }
 
     .collapsible-thread-list {
@@ -114,7 +128,7 @@ $footerHeight: 0rem;
 
       .collapsible-line {
         position: absolute;
-        width: 0.3rem;
+        width: 0.25rem;
         cursor: pointer;
         top: 0;
         bottom: 0;
@@ -128,6 +142,7 @@ $footerHeight: 0rem;
 
     ul {
       list-style-type: none;
+      padding-left: 0.5rem;
     }
   }
 

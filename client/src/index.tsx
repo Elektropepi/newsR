@@ -4,11 +4,22 @@ import './index.scss';
 import App from './App';
 import {HashRouter} from 'react-router-dom'
 import * as serviceWorker from './serviceWorker';
-import { library } from '@fortawesome/fontawesome-svg-core'
-import {faHome, faSpinner} from '@fortawesome/free-solid-svg-icons'
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {
+  faChevronDown,
+  faChevronRight,
+  faHandPointRight,
+  faHome,
+  faReply,
+  faSpinner
+} from '@fortawesome/free-solid-svg-icons'
 
 library.add(faSpinner);
 library.add(faHome);
+library.add(faReply);
+library.add(faHandPointRight);
+library.add(faChevronRight);
+library.add(faChevronDown);
 ReactDOM.render(
   <HashRouter basename={process.env.REACT_APP_BASE_URL}>
     <App/>

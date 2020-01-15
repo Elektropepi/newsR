@@ -4,38 +4,39 @@ import {CollapsibleThreadListEntry} from "./CollapsibleThreadListEntry";
 
 
 interface State {
-  forceShowIds: ArticleId[];
+  forceHideIds: ArticleId[];
 }
 
 interface Props {
   articles: ArticleInterface[];
+  baseUrl: string;
 }
 
 export class CollapsibleThreadList extends React.Component<Props, State> {
   state: Readonly<State> = {
-    forceShowIds: []
+    forceHideIds: []
   };
 
   handleArticleClick(articleId: ArticleId) {
-    const {forceShowIds} = this.state;
-    if (forceShowIds.includes(articleId)) {
-      forceShowIds.splice(forceShowIds.indexOf(articleId), 1)
+    const {forceHideIds} = this.state;
+    if (forceHideIds.includes(articleId)) {
+      forceHideIds.splice(forceHideIds.indexOf(articleId), 1)
     } else {
-      forceShowIds.push(articleId);
+      forceHideIds.push(articleId);
     }
-    this.setState({forceShowIds: forceShowIds});
+    this.setState({forceHideIds: forceHideIds});
   }
 
   render() {
-    const {articles} = this.props;
-    const {forceShowIds} = this.state;
+    const {articles, baseUrl} = this.props;
+    const {forceHideIds} = this.state;
 
     return (
       <div className="collapsible-thread-list">
         <ul>
           {articles.map(article =>
-            <CollapsibleThreadListEntry key={article.id} article={article}
-                                        showContent={forceShowIds.includes(article.id)}
+            <CollapsibleThreadListEntry baseUrl={baseUrl} key={article.id} article={article}
+                                        showContent={!forceHideIds.includes(article.id)}
                                         onClick={id => this.handleArticleClick(id)}/>)}
         </ul>
       </div>

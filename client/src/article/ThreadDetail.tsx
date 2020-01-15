@@ -1,5 +1,5 @@
 import React from "react";
-import {Article, ArticleId} from "./Article";
+import {Article} from "./Article";
 import {RouteComponentProps} from "react-router-dom";
 import {Group} from "../group/Group";
 import {Helmet} from "react-helmet";
@@ -12,7 +12,8 @@ interface State {
 }
 
 interface ArticleDetailRouteParams {
-  id: ArticleId;
+  number: string;
+  name: string;
 }
 
 interface Props extends RouteComponentProps<ArticleDetailRouteParams> {
@@ -22,7 +23,8 @@ interface Props extends RouteComponentProps<ArticleDetailRouteParams> {
 
 export class ThreadDetail extends React.Component<Props, State> {
   render() {
-    const {article} = this.props;
+    const {article, match} = this.props;
+    const baseUrl = `/groups/${match.params.name}/`;
 
     if (article === null) {
       return "Article not found!";
@@ -33,8 +35,8 @@ export class ThreadDetail extends React.Component<Props, State> {
         <Helmet>
           <title>newsR - {article?.subject}</title>
         </Helmet>
-        <ArticleDetail article={article} showContent={true}/>
-        <CollapsibleThreadList articles={article?.followUps}/>
+        <ArticleDetail baseUrl={baseUrl} article={article} showContent={true}/>
+        <CollapsibleThreadList baseUrl={baseUrl} articles={article?.followUps}/>
       </div>
     )
   }
