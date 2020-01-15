@@ -80,7 +80,7 @@ export class Article implements ArticleInterface {
     }
   }
 
-  private static bodyToContents(body: string[] | undefined): Content[] {
+  private static bodyToContents(body: string[]): Content[] {
     const contents: Content[] = [];
 
     if (!body) {
@@ -101,7 +101,7 @@ export class Article implements ArticleInterface {
   public async contents(): Promise<Content[]> {
     const groupCache = await GroupCache.instance();
     let article = await groupCache.retrieveBody(this.group.host, this.id);
-    if (!article) {
+    if (!article || !article.body) {
       article = (await this.newsieClient.body(this.id)).article;
       if (article.body) {
         await groupCache.persistBody(this.group.host, article);
