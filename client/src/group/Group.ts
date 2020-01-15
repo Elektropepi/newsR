@@ -45,7 +45,7 @@ export class Group implements GroupInterface {
       .map((a: any) => {
         const date = moment(a.headers.DATE);
         const author = Author.authorFromString(mimeWordsDecode(a.headers.FROM));
-        const article = new Article(a.headers['MESSAGE-ID'], mimeWordsDecode(a.headers.SUBJECT), date, author, this,
+        const article = new Article(a.headers['MESSAGE-ID'], a.articleNumber, mimeWordsDecode(a.headers.SUBJECT), date, author, this,
           this.newsieClient);
         article.setReferences(a.headers.REFERENCES);
         return article;
