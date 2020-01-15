@@ -173,7 +173,7 @@ export class Server implements ServerInterface {
     }
     return newsgroups.newsgroups.map((ng) => {
       const description = typeof ng.description === 'undefined' ? '' : ng.description;
-      return new Group(ng.name, description, this.newsieClient);
+      return new Group(ng.name, description, this.host, this.newsieClient);
     })[0];
   }
 
@@ -182,7 +182,7 @@ export class Server implements ServerInterface {
     const newsgroups = await this.newsieClient.listNewsgroups('tu-graz*');
     return newsgroups.newsgroups.map((ng) => {
       const description = typeof ng.description === 'undefined' ? '' : ng.description;
-      return new Group(ng.name, description, this.newsieClient);
+      return new Group(ng.name, description, this.host, this.newsieClient);
     });
   }
 }

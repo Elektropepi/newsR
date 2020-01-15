@@ -4,6 +4,7 @@ import {Article as NewsieArticle} from "newsie";
 import {mimeWordsDecode} from "emailjs-mime-codec";
 import {Author} from "../author/Author";
 import {Article, ArticleInterface} from "../article/Article";
+import {GroupCache} from "./GroupCache";
 
 export interface GroupInterface {
   readonly name: string;
@@ -19,12 +20,14 @@ interface ArticleMap {
 export class Group implements GroupInterface {
   public readonly name: string;
   public readonly description: string;
+  public readonly host: string;
   private readonly newsieClient: Newsie;
 
-  constructor(name: string, description: string, newsieClient: Newsie) {
+  constructor(name: string, description: string, host: string, newsieClient: Newsie) {
     this.name = name;
     this.description = description;
     this.newsieClient = newsieClient;
+    this.host = host;
   }
 
   public async threads(): Promise<Article[]> {
@@ -34,7 +37,11 @@ export class Group implements GroupInterface {
     }
     // todo: fix type
     const overview: any = await this.newsieClient.over(`${group.low}-${group.high}`);
-    const articlesByNumber: Article[] = overview.articles
+    const groupCache = await GroupCache.instance();
+    await groupCache.persistOverArticles(this.host, this.name, overview.articles);
+    const articles = await groupCache.retrieveOverArticles(this.host, this.name);
+    const articlesByNumber: Article[] = articles
+      .sort((a: any, b: any) => a.articleNumber - b.articleNumber)
       .map((a: any) => {
         const date = moment(a.headers.DATE);
         const author = Author.authorFromString(mimeWordsDecode(a.headers.FROM));

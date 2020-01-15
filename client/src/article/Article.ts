@@ -4,6 +4,7 @@ import parse from "emailjs-mime-parser";
 import {Author} from "../author/Author";
 import {Content} from "./Content";
 import {Group} from "../group/Group";
+import {GroupCache} from "../group/GroupCache";
 import {Attachment} from "./Attachment";
 
 export type ArticleId = string;
@@ -104,6 +105,10 @@ export class Article implements ArticleInterface {
         });
     }
 
+    if (!body) {
+      return {text: contents, attachments};
+    }
+
     body.forEach((line: string) => {
       let citationLevel = 0;
       while (citationLevel < line.length && line[citationLevel] === ">") {
@@ -124,11 +129,19 @@ export class Article implements ArticleInterface {
   }
 
   public async contents(): Promise<{text: Content[], attachments: Attachment[]}> {
-    const article = await this.newsieClient.body(this.id);
-    if (!article.article.body) {
-      return {text: [], attachments: []};
+    const groupCache = await GroupCache.instance();
+    let article = await groupCache.retrieveBody(this.group.host, this.id);
+    if (!article || !article.body) {
+      article = (await this.newsieClient.body(this.id)).article;
+      if (article.body) {
+        await groupCache.persistBody(this.group.host, article);
+      } else {
+        article.body = [
+          '[newsR: content not found and not cached]'
+        ]
+      }
     }
-    const contents = Article.bodyToContents(article.article.body);
+    const contents = Article.bodyToContents(article.body);
     Article.stripStartEndCitationsFromContents(contents.text);
     return {text: contents.text, attachments: contents.attachments};
   }
