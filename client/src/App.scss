@@ -20,8 +20,18 @@ $footerHeight: 2rem;
     cursor: pointer;
   }
 
-  .loading {
-    padding: 1rem;
+  .loading-container {
+    height: 100vh;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+
+    .loading {
+      padding: 1rem;
+      font-size: 1.2rem;
+      text-align: center;
+      color: $primaryGreen;
+    }
   }
 
   .no-link {
@@ -149,6 +159,19 @@ $footerHeight: 2rem;
       list-style-type: none;
       padding-left: 0.5rem;
     }
+  }
+
+  .no-thread {
+    height: calc(100vh - #{$headerHeight} - #{$footerHeight});
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+  }
+
+  .no-thread-text {
+    font-size: 1.5rem;
+    text-align: center;
+    color: $primaryGreen
   }
 
   .sidebar-content {

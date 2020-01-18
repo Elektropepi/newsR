@@ -12,8 +12,10 @@ export class Loading extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="loading">
-        <FontAwesomeIcon icon="spinner" spin />&nbsp;&nbsp;Loading ...
+      <div className="loading-container">
+        <div className="loading">
+          <FontAwesomeIcon icon="spinner" spin />&nbsp;&nbsp;Loading ...
+        </div>
       </div>
     );
   }

@@ -48,12 +48,12 @@ export function StartPage() {
     {
       name: "Manage groups",
       icon: "cog",
-      onPress: () => {}
+      url: ""
     },
     {
       name: "All groups",
       icon: "filter",
-      onPress: () => {}
+      url: ""
     }
   ]
 

@@ -86,7 +86,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
       {
         name: "Write",
         icon: "pencil-alt",
-        onPress: () => {}
+        url: `/post/`
       }
     ]
 
@@ -121,9 +121,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
                                       article={threads.find(thread => thread.number === parseInt(props.match.params.number))
                                         || null}/>
                       }/>
-                      <Route path={`${match.path}`}>
-                        <h3>Please select a thread or <Link to="/post/">Write</Link></h3>
-                      </Route>
+                      <NoThread url={match.path} groupName={group.name}/>
                     </Switch>
                   }/>
             }
@@ -133,4 +131,22 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
       </div>
     )
   }
+}
+
+function NoThread(props: {
+  url: string
+  groupName: string
+}) {
+  return (
+    <Route path={props.url}>
+      <div className="no-thread">
+        <div className="no-thread-text">
+          {"Welcome to " + props.groupName}
+        </div>
+        <div className="no-thread-text">
+          Please select a thread or <Link to="/post/">write</Link> a new post!
+        </div>
+      </div>
+    </Route>
+  )
 }
