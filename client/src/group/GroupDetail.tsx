@@ -18,6 +18,7 @@ interface State {
   group: Group | null;
   threads: Article[];
   readArticles: string[];
+  filteredThreads: Article[];
 }
 
 export interface GroupRouteParams {
@@ -30,7 +31,8 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
     loading: true,
     group: null,
     threads: [],
-    readArticles: []
+    filteredThreads: [],
+    readArticles: [],
   };
 
   async componentDidMount(): Promise<void> {
@@ -45,12 +47,13 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
     }
     const threads = await group.threads();
     const readArticles = getReadArticles(group.name);
-    this.setState({loading: false, group, threads, readArticles});
+
+    this.setState({loading: false, group, threads, readArticles, filteredThreads: threads});
   }
 
   render() {
     const {match} = this.props;
-    const {loading, group, threads} = this.state;
+    const {loading, group, threads, filteredThreads} = this.state;
 
     if (loading) {
       return (<Loading/>);
@@ -60,14 +63,21 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
       return "Group not found!";
     }
 
-    const articleListData = threads.map(article => ({
+    const filter = (text: string) => {
+      const filteredThreads = threads.filter(
+        (article) => article.subject.toLowerCase().includes(text) || article.author.name.toLowerCase().includes(text)
+      )
+      this.setState({filteredThreads})
+    }
+
+    const articleListData = filteredThreads.map(article => ({
       title: article.subject,
       subtitle: `${article.author.name} - ${article.date.format('DD.MM.YY HH:mm')}`,
       url: `${match.url}/${article.number}`,
       bold: !this.state.readArticles.find(a => a === article.id),
       onPress: () => {
         addReadArticle(group.name, article.id);
-        this.setState({...this.state, readArticles: this.state.readArticles.concat(article.id)})
+        this.setState({readArticles: this.state.readArticles.concat(article.id)})
       }
     }));
 
@@ -76,10 +86,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
         <Helmet>
           <title>newsR - {group?.name}</title>
         </Helmet>
-        <Header name={group.name} searchBar={{
-          filter: () => {
-          }
-        }} url={match.url}/>
+        <Header name={group.name} searchBar={{filter}} url={match.url}/>
         <div className="app-grid-body">
           <Media query={SMALL_SCREEN_QUERY}>
             {

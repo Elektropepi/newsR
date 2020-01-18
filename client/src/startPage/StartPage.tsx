@@ -38,7 +38,7 @@ export function StartPage() {
 
   const filter = (text: string) => {
     const filteredGroups = state.groups.filter(
-      (group) => group.name.toLowerCase().includes(text)
+      (group) => group.name.toLowerCase().includes(text) || group.description.toLowerCase().includes(text)
     )
     setState({...state, filteredGroups})
   }
