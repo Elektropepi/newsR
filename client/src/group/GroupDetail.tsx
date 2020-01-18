@@ -2,8 +2,6 @@ import React from "react";
 import {Group} from "./Group";
 import {ThreadDetail} from "../article/ThreadDetail";
 import {SidebarContent} from "../template/SidebarContent";
-import {GroupTitle} from "./GroupTitle";
-import {AppGrid} from "../template/AppGrid";
 import {Server} from "../server/Server";
 import {Link, Route, RouteComponentProps, Switch} from "react-router-dom"
 import Media from "react-media";
@@ -11,9 +9,9 @@ import {SMALL_SCREEN_QUERY} from "../template/Constants";
 import {Loading} from "../template/Loading";
 import {Article} from "../article/Article";
 import {List} from "../template/List";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Helmet} from "react-helmet";
 import {addReadArticle, getReadArticles} from "../localStorage/localStorage";
+import {Header} from "../template/Header";
 
 interface State {
   loading: boolean;
@@ -74,23 +72,16 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
     }));
 
     return (
-      <div className="group-detail">
+      <div className="app-grid">
         <Helmet>
           <title>newsR - {group?.name}</title>
         </Helmet>
-        <AppGrid
-          header={
-            <div className="float-div">
-              <div className="float">
-                <Link className="no-link" to={'/'}>
-                  <FontAwesomeIcon icon="home" size="xs"/>
-                </Link>
-              </div>
-
-              <GroupTitle group={group} url={match.url}/>
-            </div>
+        <Header name={group.name} searchBar={{
+          filter: () => {
           }
-          body={<Media query={SMALL_SCREEN_QUERY}>
+        }} url={match.url}/>
+        <div className="app-grid-body">
+          <Media query={SMALL_SCREEN_QUERY}>
             {
               screenIsSmall => screenIsSmall
                 ?
@@ -121,8 +112,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
                   }/>
             }
           </Media>
-          }
-          footer={<div></div>}/>
+        </div>
       </div>
     )
   }

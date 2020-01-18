@@ -10,7 +10,11 @@ $headerFontColor: $paper;
 $sidebarBg: $paper;
 $fontColor: $charcoal;
 
-$headerHeight: 2.5rem;
+$primaryGreen: #196A41;
+$secondaryGreen: #489370;
+$primaryGray: #A5A5A5;
+
+$headerHeight: 7rem;
 $footerHeight: 0rem;
 
 .app {
@@ -42,6 +46,11 @@ $footerHeight: 0rem;
 
   h1 {
     font-size: 2rem;
+    font-weight: normal;
+  }
+
+  h2 {
+    font-size: 1.7rem;
     font-weight: normal;
   }
 
@@ -165,30 +174,39 @@ $footerHeight: 0rem;
     }
   }
 
-  .group-detail {
-    .group-title {
-      a {
-        display: block;
-        padding: .4rem 1rem;
-      }
-    }
-  }
-
   .app-grid {
     display: grid;
-    grid-template-columns: auto;
     grid-template-rows: $headerHeight auto $footerHeight;
     grid-template-areas: "header" "body" "footer";
 
     .app-grid-header {
       grid-area: header;
-      font-size: 1.5rem;
-      text-align: left;
-      background: $headerBg;
-      color: white;
       position: sticky;
       top: 0;
       z-index: 10;
+      color: lighten($paper, 30%);
+      background: $primaryGreen;
+      padding: 1rem;
+
+      a {
+        &:link {
+          color: inherit;
+        }
+
+        &:visited {
+          color: inherit;
+        }
+      }
+
+      img {
+        height: 4rem;
+        margin: 0.3rem;
+      }
+
+      .float {
+        float: left;
+        margin: 0.2rem 1rem 0.2rem 0.5rem;
+      }
     }
 
     .app-grid-body {
@@ -205,16 +223,5 @@ $footerHeight: 0rem;
     margin-top: 1rem;
     font-size: 1rem;
   }
-
-  .float-div {
-    margin: 0;
-    padding: 0;
-
-    .float {
-      float: left;
-      margin: 0.2rem 1rem 0.2rem 0.5rem;
-    }
-  }
-
 }
 
