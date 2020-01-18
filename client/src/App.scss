@@ -11,7 +11,7 @@ $secondaryGreen: #489370;
 $primaryGray: #A5A5A5;
 
 $headerHeight: 7rem;
-$footerHeight: 0rem;
+$footerHeight: 2rem;
 
 .app {
   color: $fontColor;
@@ -212,6 +212,12 @@ $footerHeight: 0rem;
 
     .app-grid-footer {
       grid-area: footer;
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+      color: lighten($paper, 30%);
+      background: $primaryGreen;
+      padding: 0.5rem;
     }
   }
 

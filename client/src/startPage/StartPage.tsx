@@ -5,6 +5,7 @@ import {Loading} from "../template/Loading";
 import {Group} from "../group/Group";
 import {Helmet} from "react-helmet"
 import {Header} from "../template/Header";
+import {Footer} from "../template/Footer";
 
 interface StartPageState {
   groups: Group[]
@@ -56,6 +57,7 @@ export function StartPage() {
           url: `/groups/${group.name}`
         }))}/>
       </div>
+      <Footer/>
     </div>
   )
 }

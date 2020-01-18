@@ -12,6 +12,7 @@ import {List} from "../template/List";
 import {Helmet} from "react-helmet";
 import {addReadArticle, getReadArticles} from "../localStorage/localStorage";
 import {Header} from "../template/Header";
+import {Footer} from "../template/Footer";
 
 interface State {
   loading: boolean;
@@ -120,6 +121,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
             }
           </Media>
         </div>
+        <Footer/>
       </div>
     )
   }
