@@ -1,11 +1,7 @@
 // source: https://www.canva.com/learn/website-color-schemes/
-$paleGold: #C0B283;
-$silk: #DCD0C0;
 $paper: #F4F4F4;
 $charcoal: #373737;
 
-$headerBg: $paleGold;
-$subHeaderBg: darken($silk, 7%);
 $headerFontColor: $paper;
 $sidebarBg: $paper;
 $fontColor: $charcoal;
@@ -56,7 +52,7 @@ $footerHeight: 0rem;
 
   .header {
     color: lighten($paper, 30%);
-    background: $subHeaderBg;
+    background: $secondaryGreen;
     padding: 1rem;
 
     a {
@@ -141,7 +137,7 @@ $footerHeight: 0rem;
         cursor: pointer;
         top: 0;
         bottom: 0;
-        background: $subHeaderBg;
+        background: $secondaryGreen;
       }
     }
 
