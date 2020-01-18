@@ -4,7 +4,7 @@ import {List} from "../template/List";
 import {Loading} from "../template/Loading";
 import {Group} from "../group/Group";
 import {Helmet} from "react-helmet"
-import {Header} from "../template/Header";
+import {Button, Header} from "../template/Header";
 import {Footer} from "../template/Footer";
 
 interface StartPageState {
@@ -44,12 +44,25 @@ export function StartPage() {
     setState({...state, filteredGroups})
   }
 
+  const buttons: Button[] = [
+    {
+      name: "Manage groups",
+      icon: "cog",
+      onPress: () => {}
+    },
+    {
+      name: "All groups",
+      icon: "filter",
+      onPress: () => {}
+    }
+  ]
+
   return (
     <div className="app-grid">
       <Helmet>
         <title>newsR - news.tugraz.at</title>
       </Helmet>
-      <Header name={"Welcome to news.tugraz.at"} searchBar={{filter}}/>
+      <Header name={"Welcome to news.tugraz.at"} searchBar={{filter}} buttons={buttons}/>
       <div className="app-grid-body">
         <List data={state.filteredGroups.map((group) => ({
           title: group.name,

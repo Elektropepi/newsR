@@ -11,7 +11,7 @@ import {Article} from "../article/Article";
 import {List} from "../template/List";
 import {Helmet} from "react-helmet";
 import {addReadArticle, getReadArticles} from "../localStorage/localStorage";
-import {Header} from "../template/Header";
+import {Button, Header} from "../template/Header";
 import {Footer} from "../template/Footer";
 
 interface State {
@@ -82,12 +82,20 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
       }
     }));
 
+    const buttons: Button[] = [
+      {
+        name: "Write",
+        icon: "pencil-alt",
+        onPress: () => {}
+      }
+    ]
+
     return (
       <div className="app-grid">
         <Helmet>
           <title>newsR - {group?.name}</title>
         </Helmet>
-        <Header name={group.name} searchBar={{filter}} url={match.url}/>
+        <Header name={group.name} searchBar={{filter}} url={match.url} buttons={buttons}/>
         <div className="app-grid-body">
           <Media query={SMALL_SCREEN_QUERY}>
             {
