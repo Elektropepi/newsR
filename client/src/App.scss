@@ -237,6 +237,7 @@ $footerHeight: 2rem;
     .app-grid-body {
       grid-area: body;
       min-width: 0;
+      min-height: calc(100vh - #{$headerHeight} - #{$footerHeight});
     }
 
     .app-grid-footer {
