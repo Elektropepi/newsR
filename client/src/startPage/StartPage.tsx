@@ -62,7 +62,7 @@ export function StartPage() {
       <Helmet>
         <title>newsR - news.tugraz.at</title>
       </Helmet>
-      <Header name={"Welcome to news.tugraz.at"} searchBar={{filter}} buttons={buttons}/>
+      <Header name={"news.tugraz.at"} searchBar={{filter}} buttons={buttons}/>
       <div className="app-grid-body">
         <List data={state.filteredGroups.map((group) => ({
           title: group.name,
