@@ -7,7 +7,8 @@ import {IconProp} from "@fortawesome/fontawesome-svg-core";
 export type Button = {
   name: string
   icon: IconProp
-  url: string
+  url?: string
+  onPress?(): void
 }
 
 export function Header(props: {
@@ -26,7 +27,7 @@ export function Header(props: {
         <input className="search" type="text" placeholder="Search..."
                onChange={(e) => props.searchBar.filter(e.target.value.toLowerCase())}/>
       </div>
-      {props.buttons && props.buttons.map((button, index) => <Button key={index} icon={button.icon} name={button.name} url={button.url}/>
+      {props.buttons && props.buttons.map((button, index) => <Button key={index} icon={button.icon} name={button.name} url={button.url} onPress={button.onPress}/>
       )}
     </div>
   )
@@ -63,14 +64,31 @@ function Heading(props: {
 function Button(props: {
   icon: IconProp,
   name: string,
-  url: string
+  url?: string
+  onPress?(): void
 }) {
-  const {icon, name, url} = props
-  return (
-    <Link to={url} className="no-link">
-      <div className="icon">
+  const {icon, name, url, onPress} = props
+  if (url) {
+    return (
+      <Link to={url} className="no-link">
+        <div className="icon">
+          <IconButton icon={icon}>{name}</IconButton>
+        </div>
+      </Link>
+    )
+  }
+
+  if (onPress) {
+    return (
+      <div className="icon" onClick={() => onPress()}>
         <IconButton icon={icon}>{name}</IconButton>
       </div>
-    </Link>
+    )
+  }
+
+  return (
+    <div className="icon">
+      <IconButton icon={icon}>{name}</IconButton>
+    </div>
   )
 }
