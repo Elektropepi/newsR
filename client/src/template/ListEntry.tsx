@@ -9,14 +9,14 @@ export function ListEntry<T extends {
   subtitle?: string
   bold?: boolean
   icon?: IconProp
-  onPress?: () => void
+  onPress?: (entry: T) => void
 }>(props: {
   entry: T
 }) {
   const {entry} = props;
 
   return (
-    <div onClick={() => entry.onPress ? entry.onPress() : undefined}>
+    <div onClick={() => entry.onPress ? entry.onPress(entry) : undefined}>
       <p className={"list-entry"}>
         {entry.icon &&
           <div className="float">

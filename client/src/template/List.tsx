@@ -8,7 +8,7 @@ export function List<T extends {
   subtitle?: string
   bold?: boolean
   icon?: IconProp
-  onPress?: () => void
+  onPress?: (entry: T) => void
 }>(props: {
   data: T[]
 }) {
