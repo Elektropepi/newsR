@@ -102,7 +102,7 @@ export class ArticleDetail extends React.Component<Props, State> {
           {attachments.length > 0 &&
           <div>
             <p>Attachments:</p>
-            <ul>
+            <ul className="attachments">
               {attachments.map((attachment) =>
                 <li key={attachment.name}>
                   <a
@@ -110,7 +110,7 @@ export class ArticleDetail extends React.Component<Props, State> {
                     download={attachment.name}
                   >
                     {['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'].includes(attachment.contentType) ? (
-                      <img src={attachment.dataUrl} style={{width: "100%"}}  alt={attachment.name} />
+                      <img src={attachment.dataUrl}  alt={attachment.name} />
                       ) : (
                       <span>{attachment.name}</span>
                       )
