@@ -1,17 +1,17 @@
 // source: https://www.canva.com/learn/website-color-schemes/
-$paleGold: #C0B283;
-$silk: #DCD0C0;
 $paper: #F4F4F4;
 $charcoal: #373737;
 
-$headerBg: $paleGold;
-$subHeaderBg: darken($silk, 7%);
 $headerFontColor: $paper;
 $sidebarBg: $paper;
 $fontColor: $charcoal;
 
-$headerHeight: 2.5rem;
-$footerHeight: 0rem;
+$primaryGreen: #196A41;
+$secondaryGreen: #489370;
+$primaryGray: #A5A5A5;
+
+$headerHeight: 7rem;
+$footerHeight: 2rem;
 
 .app {
   color: $fontColor;
@@ -20,8 +20,18 @@ $footerHeight: 0rem;
     cursor: pointer;
   }
 
-  .loading {
-    padding: 1rem;
+  .loading-container {
+    height: 100vh;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+
+    .loading {
+      padding: 1rem;
+      font-size: 1.2rem;
+      text-align: center;
+      color: $primaryGreen;
+    }
   }
 
   .no-link {
@@ -45,9 +55,14 @@ $footerHeight: 0rem;
     font-weight: normal;
   }
 
+  h2 {
+    font-size: 1.5rem;
+    font-weight: normal;
+  }
+
   .header {
     color: lighten($paper, 30%);
-    background: $subHeaderBg;
+    background: $secondaryGreen;
     padding: 1rem;
 
     a {
@@ -132,7 +147,7 @@ $footerHeight: 0rem;
         cursor: pointer;
         top: 0;
         bottom: 0;
-        background: $subHeaderBg;
+        background: $secondaryGreen;
       }
     }
 
@@ -144,6 +159,19 @@ $footerHeight: 0rem;
       list-style-type: none;
       padding-left: 0.5rem;
     }
+  }
+
+  .no-thread {
+    height: calc(100vh - #{$headerHeight} - #{$footerHeight});
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+  }
+
+  .no-thread-text {
+    font-size: 1.5rem;
+    text-align: center;
+    color: $primaryGreen
   }
 
   .sidebar-content {
@@ -165,39 +193,61 @@ $footerHeight: 0rem;
     }
   }
 
-  .group-detail {
-    .group-title {
-      a {
-        display: block;
-        padding: .4rem 1rem;
-      }
-    }
-  }
-
   .app-grid {
     display: grid;
-    grid-template-columns: auto;
     grid-template-rows: $headerHeight auto $footerHeight;
     grid-template-areas: "header" "body" "footer";
 
     .app-grid-header {
       grid-area: header;
-      font-size: 1.5rem;
-      text-align: left;
-      background: $headerBg;
-      color: white;
       position: sticky;
       top: 0;
       z-index: 10;
+      color: lighten($paper, 30%);
+      background: $primaryGreen;
+      padding: 1rem;
+
+      a {
+        &:link {
+          color: inherit;
+        }
+
+        &:visited {
+          color: inherit;
+        }
+      }
+
+      img {
+        height: 4rem;
+        margin: 0.3rem;
+      }
+
+      .float {
+        float: left;
+        margin: 0.2rem 1rem 0.2rem 0.5rem;
+      }
+
+      .icon {
+        font-size: 1.3rem;
+        padding: 1.65rem 1rem 1.65rem 1rem;
+        float: right;
+      }
     }
 
     .app-grid-body {
       grid-area: body;
       min-width: 0;
+      min-height: calc(100vh - #{$headerHeight} - #{$footerHeight});
     }
 
     .app-grid-footer {
       grid-area: footer;
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+      color: lighten($paper, 30%);
+      background: $primaryGreen;
+      padding: 0.5rem;
     }
   }
 
@@ -205,16 +255,5 @@ $footerHeight: 0rem;
     margin-top: 1rem;
     font-size: 1rem;
   }
-
-  .float-div {
-    margin: 0;
-    padding: 0;
-
-    .float {
-      float: left;
-      margin: 0.2rem 1rem 0.2rem 0.5rem;
-    }
-  }
-
 }
 

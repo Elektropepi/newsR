@@ -2,8 +2,6 @@ import React from "react";
 import {Group} from "./Group";
 import {ThreadDetail} from "../article/ThreadDetail";
 import {SidebarContent} from "../template/SidebarContent";
-import {GroupTitle} from "./GroupTitle";
-import {AppGrid} from "../template/AppGrid";
 import {Server} from "../server/Server";
 import {Link, Route, RouteComponentProps, Switch} from "react-router-dom"
 import Media from "react-media";
@@ -11,15 +9,17 @@ import {SMALL_SCREEN_QUERY} from "../template/Constants";
 import {Loading} from "../template/Loading";
 import {Article} from "../article/Article";
 import {List} from "../template/List";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Helmet} from "react-helmet";
 import {addReadArticle, getReadArticles} from "../localStorage/localStorage";
+import {Button, Header} from "../template/Header";
+import {Footer} from "../template/Footer";
 
 interface State {
   loading: boolean;
   group: Group | null;
   threads: Article[];
   readArticles: string[];
+  filteredThreads: Article[];
 }
 
 export interface GroupRouteParams {
@@ -32,7 +32,8 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
     loading: true,
     group: null,
     threads: [],
-    readArticles: []
+    filteredThreads: [],
+    readArticles: [],
   };
 
   async componentDidMount(): Promise<void> {
@@ -47,12 +48,13 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
     }
     const threads = await group.threads();
     const readArticles = getReadArticles(group.name);
-    this.setState({loading: false, group, threads, readArticles});
+
+    this.setState({loading: false, group, threads, readArticles, filteredThreads: threads});
   }
 
   render() {
     const {match} = this.props;
-    const {loading, group, threads} = this.state;
+    const {loading, group, threads, filteredThreads} = this.state;
 
     if (loading) {
       return (<Loading/>);
@@ -62,35 +64,40 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
       return "Group not found!";
     }
 
-    const articleListData = threads.map(article => ({
+    const filter = (text: string) => {
+      const filteredThreads = threads.filter(
+        (article) => article.subject.toLowerCase().includes(text) || article.author.name.toLowerCase().includes(text)
+      )
+      this.setState({filteredThreads})
+    }
+
+    const articleListData = filteredThreads.map(article => ({
       title: article.subject,
       subtitle: `${article.author.name} - ${article.date.format('DD.MM.YY HH:mm')}`,
       url: `${match.url}/${article.number}`,
       bold: !this.state.readArticles.find(a => a === article.id),
       onPress: () => {
         addReadArticle(group.name, article.id);
-        this.setState({...this.state, readArticles: this.state.readArticles.concat(article.id)})
+        this.setState({readArticles: this.state.readArticles.concat(article.id)})
       }
     }));
 
+    const buttons: Button[] = [
+      {
+        name: "Write",
+        icon: "pencil-alt",
+        url: `/post/`
+      }
+    ]
+
     return (
-      <div className="group-detail">
+      <div className="app-grid">
         <Helmet>
           <title>newsR - {group?.name}</title>
         </Helmet>
-        <AppGrid
-          header={
-            <div className="float-div">
-              <div className="float">
-                <Link className="no-link" to={'/'}>
-                  <FontAwesomeIcon icon="home" size="xs"/>
-                </Link>
-              </div>
-
-              <GroupTitle group={group} url={match.url}/>
-            </div>
-          }
-          body={<Media query={SMALL_SCREEN_QUERY}>
+        <Header name={group.name} searchBar={{filter}} url={match.url} buttons={buttons}/>
+        <div className="app-grid-body">
+          <Media query={SMALL_SCREEN_QUERY}>
             {
               screenIsSmall => screenIsSmall
                 ?
@@ -114,16 +121,32 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
                                       article={threads.find(thread => thread.number === parseInt(props.match.params.number))
                                         || null}/>
                       }/>
-                      <Route path={`${match.path}`}>
-                        <h3>Please select a thread or <Link to="/post/">Write</Link></h3>
-                      </Route>
+                      <NoThread url={match.path} groupName={group.name}/>
                     </Switch>
                   }/>
             }
           </Media>
-          }
-          footer={<div></div>}/>
+        </div>
+        <Footer/>
       </div>
     )
   }
+}
+
+function NoThread(props: {
+  url: string
+  groupName: string
+}) {
+  return (
+    <Route path={props.url}>
+      <div className="no-thread">
+        <div className="no-thread-text">
+          {"Welcome to " + props.groupName}
+        </div>
+        <div className="no-thread-text">
+          Please select a thread or <Link to="/post/">write</Link> a new post!
+        </div>
+      </div>
+    </Route>
+  )
 }

@@ -11,7 +11,10 @@ import {
   faHandPointRight,
   faHome,
   faReply,
-  faSpinner
+  faSpinner,
+  faPencilAlt,
+  faFilter,
+  faCog
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faSpinner);
@@ -20,6 +23,9 @@ library.add(faReply);
 library.add(faHandPointRight);
 library.add(faChevronRight);
 library.add(faChevronDown);
+library.add(faPencilAlt);
+library.add(faFilter);
+library.add(faCog);
 ReactDOM.render(
   <HashRouter basename={process.env.REACT_APP_BASE_URL}>
     <App/>

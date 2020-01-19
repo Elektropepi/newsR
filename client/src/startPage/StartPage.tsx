@@ -3,7 +3,9 @@ import {Server} from "../server/Server";
 import {List} from "../template/List";
 import {Loading} from "../template/Loading";
 import {Group} from "../group/Group";
-import { Helmet } from "react-helmet"
+import {Helmet} from "react-helmet"
+import {Button, Header} from "../template/Header";
+import {Footer} from "../template/Footer";
 
 interface StartPageState {
   groups: Group[]
@@ -37,25 +39,38 @@ export function StartPage() {
 
   const filter = (text: string) => {
     const filteredGroups = state.groups.filter(
-      (group) => group.name.toLowerCase().includes(text)
+      (group) => group.name.toLowerCase().includes(text) || group.description.toLowerCase().includes(text)
     )
     setState({...state, filteredGroups})
   }
 
+  const buttons: Button[] = [
+    {
+      name: "Manage groups",
+      icon: "cog",
+      url: ""
+    },
+    {
+      name: "All groups",
+      icon: "filter",
+      url: ""
+    }
+  ]
+
   return (
-    <div>
+    <div className="app-grid">
       <Helmet>
         <title>newsR - news.tugraz.at</title>
       </Helmet>
-      <div className="header">
-        <h1>Welcome to news.tugraz.at</h1>
-        <input className="search" type="text" placeholder="Search..." onChange={(e) => filter(e.target.value.toLowerCase())}/>
+      <Header name={"news.tugraz.at"} searchBar={{filter}} buttons={buttons}/>
+      <div className="app-grid-body">
+        <List data={state.filteredGroups.map((group) => ({
+          title: group.name,
+          subtitle: group.description,
+          url: `/groups/${group.name}`
+        }))}/>
       </div>
-      <List data={state.filteredGroups.map((group) => ({
-        title: group.name,
-        subtitle: group.description,
-        url: `/groups/${group.name}`
-      }))}/>
+      <Footer/>
     </div>
   )
 }
