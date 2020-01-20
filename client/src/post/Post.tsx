@@ -5,6 +5,9 @@ import {RouteComponentProps} from "react-router-dom";
 import {Group} from "../group/Group";
 import {Article} from "../article/Article";
 import {Loading} from "../template/Loading";
+import {Helmet} from "react-helmet";
+import {Header} from "../template/Header";
+import {withRouter} from 'react-router-dom'
 
 interface State {
   loading: boolean;
@@ -22,7 +25,7 @@ export interface PostRouteParams {
   number: string;
 }
 
-export class Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
+class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
 
   public static replyStr = 'Re: ';
 
@@ -69,7 +72,7 @@ export class Post extends React.Component<RouteComponentProps<PostRouteParams>, 
       });
       return;
     }
-    const subject = article.subject.startsWith(Post.replyStr) ? article.subject : Post.replyStr + article.subject;
+    const subject = article.subject.startsWith(_Post.replyStr) ? article.subject : _Post.replyStr + article.subject;
     this.setState({
       group,
       article,
@@ -122,76 +125,87 @@ export class Post extends React.Component<RouteComponentProps<PostRouteParams>, 
       );
     }
 
+    let headerText = group.name;
+    if (article) {
+      headerText += ` ${article.number} follow up`
+    }
     // todo: insert article content as quote..
     // todo: form validation, author
     // todo: fix reload bug
     return (
-      <div>
-        group: {group ? group.name : "no group"}<br />
-        article: {article ? article.number : "no article"}<br />
-        <form onSubmit={(event: FormEvent<HTMLFormElement>) => this.send(event)}>
-          <div>
-            <input
-              name="author"
-              type="text"
-              placeholder="Name <mail@provider.tld>"
-              value={author}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                this.setState({
-                  author: event.currentTarget.value
-                })
-              }}
-            />
-          </div>
-          <div>
-            <input
-              name="subject"
-              type="text"
-              placeholder="Subject: …"
-              value={subject}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                this.setState({
-                  subject: event.currentTarget.value
-                })
-              }}
-            />
-          </div>
-          <div>
-            <input name="group" type="text" value={group.name} readOnly />
-          </div>
-          {article && (
-            <div>
+      <div className="app-grid">
+        <Helmet>
+          <title>newsR - {group?.name}</title>
+        </Helmet>
+        <Header name={headerText} url={match.url} />
+        <div className="app-grid-body">
+          <form className="postArticle" onSubmit={(event: FormEvent<HTMLFormElement>) => this.send(event)}>
+            <div className="inputGroup">
               <input
-                name="followup to"
+                name="author"
                 type="text"
-                value={article?.references.concat(article.id).join(' ')}
-                readOnly
+                placeholder="Name <mail@provider.tld>"
+                value={author}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  this.setState({
+                    author: event.currentTarget.value
+                  })
+                }}
               />
             </div>
-          )}
-          <div>
-            <textarea
-              value={content}
-              onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-                this.setState({
-                  content: event.currentTarget.value
-                })
-              }}
-            />
-          </div>
-          <div>
-            <button type="submit" disabled={sending || done}>Submit</button>
-          </div>
-          <div>
-            {sending && !done && (
-              <span>Sending..</span>
+            <div className="inputGroup">
+              <input
+                name="subject"
+                type="text"
+                placeholder="Subject: …"
+                value={subject}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  this.setState({
+                    subject: event.currentTarget.value
+                  })
+                }}
+              />
+            </div>
+            <div className="inputGroup">
+              <input name="group" type="text" value={group.name} readOnly tabIndex={-1} />
+            </div>
+            {article && (
+              <div className="inputGroup">
+                <input
+                  name="followup to"
+                  type="text"
+                  value={article?.references.concat(article.id).join(' ')}
+                  readOnly
+                />
+              </div>
             )}
-            {done && (
-              <span>Send</span>
-            )}
-          </div>
-        </form>
+            <div className="inputGroup">
+              <textarea
+                value={content}
+                onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+                  this.setState({
+                    content: event.currentTarget.value
+                  })
+                }}
+              />
+            </div>
+            <div className="inputGroup">
+              <button className="submit" type="submit" disabled={sending || done}>Post</button>
+              <button className="back" type="reset" onClick={() => this.props.history.goBack()}>Go back</button>
+            </div>
+            <div>
+              {sending && !done && (
+                <span>Sending..</span>
+              )}
+              {done && (
+                <span>Send</span>
+              )}
+            </div>
+          </form>
+        </div>
       </div>
     );
   }
 }
+
+export const Post = withRouter(_Post);
