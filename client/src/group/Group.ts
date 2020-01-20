@@ -30,6 +30,15 @@ export class Group implements GroupInterface {
     this.host = host;
   }
 
+  public async article(articleNumber: number): Promise<Article|null> {
+    // todo: fix type
+    const overview: any = await this.newsieClient.over(`${articleNumber}-${articleNumber}`);
+    const groupCache = await GroupCache.instance();
+    await groupCache.persistOverArticles(this.host, this.name, overview.articles);
+    const a: NewsieArticle = overview.articles[0];
+    return Article.ArticleFromNewsieArticle(a, this, this.newsieClient);
+  }
+
   public async threads(): Promise<Article[]> {
     const group = (await this.newsieClient.group(this.name)).group;
     if (group.number === 0) {
@@ -40,15 +49,10 @@ export class Group implements GroupInterface {
     const groupCache = await GroupCache.instance();
     await groupCache.persistOverArticles(this.host, this.name, overview.articles);
     const articles = await groupCache.retrieveOverArticles(this.host, this.name);
-    const articlesByNumber: Article[] = articles
+    const articlesByNumber: any[] = articles
       .sort((a: any, b: any) => a.articleNumber - b.articleNumber)
       .map((a: any) => {
-        const date = moment(a.headers.DATE);
-        const author = Author.authorFromString(mimeWordsDecode(a.headers.FROM));
-        const article = new Article(a.headers['MESSAGE-ID'], a.articleNumber, mimeWordsDecode(a.headers.SUBJECT), date, author, this,
-          this.newsieClient);
-        article.setReferences(a.headers.REFERENCES);
-        return article;
+        return Article.ArticleFromNewsieArticle(a, this, this.newsieClient);
       });
     const articleIdMap: ArticleMap = {};
     const threads: Article[] = [];

@@ -14,6 +14,7 @@ interface Props {
   onClickHeader: ((id: ArticleId) => void) | null;
   hasSimpleHeader: boolean;
   baseUrl: string;
+  groupName: string;
 }
 
 const defaultProps: Partial<Props> = {
@@ -62,7 +63,7 @@ export class ArticleDetail extends React.Component<Props, State> {
   }
 
   render() {
-    const {article, showContent, onClickHeader, hasSimpleHeader, baseUrl} = this.props;
+    const {article, showContent, onClickHeader, hasSimpleHeader, baseUrl, groupName} = this.props;
     const {contents, attachments, isContentLoading} = this.state;
     return (
       <div className="article-detail">
@@ -87,7 +88,7 @@ export class ArticleDetail extends React.Component<Props, State> {
               <IconButton icon="reply">Reply</IconButton>
             </div>
           </a>
-          <Link to={`${baseUrl}${article.number}/post`} className="no-link">
+          <Link to={`/post/${groupName}/${article.number}`} className="no-link">
             <div className="article-button">
               <IconButton icon="hand-point-right">Follow Up</IconButton>
             </div>

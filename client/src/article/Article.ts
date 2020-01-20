@@ -1,4 +1,4 @@
-import {Moment} from "moment";
+import moment, {Moment} from "moment";
 import Newsie from 'newsie';
 import parse from "emailjs-mime-parser";
 import {Author} from "../author/Author";
@@ -6,6 +6,8 @@ import {Content} from "./Content";
 import {Group} from "../group/Group";
 import {GroupCache} from "../group/GroupCache";
 import {Attachment} from "./Attachment";
+import {mimeWordsDecode} from "emailjs-mime-codec";
+import {Article as NewsieArticle} from "newsie";
 
 export type ArticleId = string;
 
@@ -41,6 +43,18 @@ export class Article implements ArticleInterface {
     this.author = author;
     this.group = group;
     this.newsieClient = newsieClient;
+  }
+
+  public static ArticleFromNewsieArticle(a: NewsieArticle, group: Group, newsieClient: Newsie): Article | null {
+    if (!a || !a.headers || !a.articleNumber) {
+      return null;
+    }
+    const date = moment(a.headers.DATE);
+    const author = Author.authorFromString(mimeWordsDecode(a.headers.FROM));
+    const article = new Article(a.headers['MESSAGE-ID'], a.articleNumber, mimeWordsDecode(a.headers.SUBJECT), date,
+      author, group, newsieClient);
+    article.setReferences(a.headers.REFERENCES);
+    return article;
   }
 
   public static stripStartEndCitationsFromContents(contents: Content[]) {

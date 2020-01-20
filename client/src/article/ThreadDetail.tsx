@@ -35,8 +35,8 @@ export class ThreadDetail extends React.Component<Props, State> {
         <Helmet>
           <title>newsR - {article?.subject}</title>
         </Helmet>
-        <ArticleDetail baseUrl={baseUrl} article={article} showContent={true}/>
-        <CollapsibleThreadList baseUrl={baseUrl} articles={article?.followUps}/>
+        <ArticleDetail baseUrl={baseUrl} groupName={match.params.name} article={article} showContent={true}/>
+        <CollapsibleThreadList baseUrl={baseUrl} groupName={match.params.name} articles={article?.followUps}/>
       </div>
     )
   }

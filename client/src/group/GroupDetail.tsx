@@ -86,7 +86,7 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
       {
         name: "Write",
         icon: "pencil-alt",
-        url: `/post/`
+        url: `/post/${group.name}`
       }
     ]
 
@@ -144,7 +144,7 @@ function NoThread(props: {
           {"Welcome to " + props.groupName}
         </div>
         <div className="no-thread-text">
-          Please select a thread or <Link to="/post/">write</Link> a new post!
+          Please select a thread or <Link to={`/post/${props.groupName}`}>write</Link> a new post!
         </div>
       </div>
     </Route>

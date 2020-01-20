@@ -12,18 +12,19 @@ interface Props {
   showContent: boolean;
   onClick: (id: ArticleId) => void;
   baseUrl: string;
+  groupName: string;
 }
 
 export class CollapsibleThreadListEntry extends React.Component<Props, State> {
   render() {
-    const {showContent, article, onClick, baseUrl} = this.props;
+    const {showContent, article, onClick, baseUrl, groupName} = this.props;
     return (
       <li key={article.id}>
-        <ArticleDetail article={article} baseUrl={baseUrl} showContent={showContent} onClickHeader={id => onClick(id)}
+        <ArticleDetail article={article} baseUrl={baseUrl} groupName={groupName} showContent={showContent} onClickHeader={id => onClick(id)}
                        hasSimpleHeader={true}/>
         {showContent && <div>
-          <CollapsibleThreadList articles={article.followUps} baseUrl={baseUrl}/>
-          <div className="collapsible-line" onClick={() => onClick(article.id)}/>
+          <CollapsibleThreadList articles={article.followUps} baseUrl={baseUrl} groupName={groupName} />
+          <div className="collapsible-line" onClick={() => onClick(article.id)} />
         </div>}
       </li>
     )
