@@ -107,20 +107,21 @@ export function StartPage() {
     return state.groups.filter(group => isGroupFiltered(group) && (isSubscription !== true || isGroupSubscribed(group.name)));
   };
 
+  const nntpUrl = process.env.REACT_APP_NNTP_URL ? process.env.REACT_APP_NNTP_URL : '';
   return (
     <div className="app-grid">
       <Helmet>
-        <title>newsR - news.tugraz.at</title>
+        <title>newsR - {nntpUrl}</title>
       </Helmet>
       <Switch>
         <Route path="/groups">
-          <Header name={"news.tugraz.at"} searchBar={{filter}} buttons={groupButtons}/>
+          <Header name={nntpUrl} searchBar={{filter}} buttons={groupButtons}/>
         </Route>
         <Route path="/groups-manage">
-          <Header name={"news.tugraz.at"} searchBar={{filter}} buttons={manageButtons}/>
+          <Header name={nntpUrl} searchBar={{filter}} buttons={manageButtons}/>
         </Route>
         <Route path="/">
-          <Header name={"news.tugraz.at"} searchBar={{filter}} buttons={subscriptionButtons}/>
+          <Header name={nntpUrl} searchBar={{filter}} buttons={subscriptionButtons}/>
         </Route>
       </Switch>
       <div className="app-grid-body">
