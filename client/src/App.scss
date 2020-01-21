@@ -269,7 +269,7 @@ $biggerFontSize: 1.2rem;
     }
 
     .app-grid-footer {
-      text-align: right;
+      display: flex;
       height: $footerHeight;
       position: fixed;
       bottom: 0;
@@ -279,6 +279,9 @@ $biggerFontSize: 1.2rem;
       color: lighten($paper, 30%);
       background: $primaryGreen;
       padding: 0.5rem;
+      .app-name {
+        flex-grow: 1;
+      }
     }
   }
 
