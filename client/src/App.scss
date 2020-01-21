@@ -222,6 +222,7 @@ $biggerFontSize: 1.2rem;
       color: lighten($paper, 30%);
       background: $primaryGreen;
       padding: 1rem;
+      display: flex;
 
       a {
         &:link {
@@ -233,20 +234,19 @@ $biggerFontSize: 1.2rem;
         }
       }
 
+      .search-bar {
+        flex-grow: 1;
+      }
+
       img {
         width: 3rem;
         margin-top: 0.8rem;
         margin-bottom: 0.8rem;
       }
 
-      .float {
-        float: left;
-        margin: 0.2rem 1rem 0.2rem 0.5rem;
-        width: 48%;
-      }
+
 
       .logo {
-        float: left;
         margin-right: 0.8rem;
         width: available;
       }
@@ -281,12 +281,13 @@ $biggerFontSize: 1.2rem;
   .search {
     margin-top: 0.8rem;
     font-size: $standardFontSize;
-    max-width: 100%;
+    width: 100%;
+    max-width: 30rem;
   }
 }
 
 .attachments {
-  img: {
+  img {
     max-width: 100%;
   }
 }
@@ -336,3 +337,6 @@ form.postArticle {
   }
 }
 
+* {
+  box-sizing: border-box;
+}

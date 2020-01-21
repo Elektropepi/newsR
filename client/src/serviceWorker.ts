@@ -38,6 +38,7 @@ export function register(config?: Config) {
       // serve assets; see https://github.com/facebook/create-react-app/issues/2374
       return;
     }
+    // websocke interception not possible with serviceWorker: https://stackoverflow.com/a/39602235/2306363
 
     window.addEventListener('load', () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;

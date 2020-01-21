@@ -23,15 +23,17 @@ export function Header(props: {
   return (
     <div className="app-grid-header">
       <Logo/>
-      <div className="float">
+      <div className="search-bar">
         <Heading name={props.name} url={props.url}/>
         {searchBar && searchBar.filter &&
         <input className="search" type="text" placeholder="Search..."
                onChange={(e) => searchBar.filter(e.target.value.toLowerCase())}/>
         }
       </div>
-      {props.buttons && props.buttons.map((button, index) => <Button key={index} icon={button.icon} name={button.name} url={button.url} onPress={button.onPress}/>
+      {props.buttons && props.buttons.map((button, index) =>
+        <Button key={index} icon={button.icon} name={button.name} url={button.url} onPress={button.onPress}/>
       )}
+
     </div>
   )
 }

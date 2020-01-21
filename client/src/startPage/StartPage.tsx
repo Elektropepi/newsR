@@ -76,13 +76,13 @@ export function StartPage() {
 
   const subscriptionButton: Button = {
     name: "Subscriptions",
-    icon: "filter",
+    icon: "home",
     url: "/"
   };
 
   const allGroupsButton: Button = {
     name: "All Groups",
-    icon: "filter",
+    icon: "list",
     url: "/groups"
   };
 
