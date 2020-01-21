@@ -68,31 +68,31 @@ export class ArticleDetail extends React.Component<Props, State> {
     return (
       <div className="article-detail">
         <div className="header" onClick={() => onClickHeader && onClickHeader(article.id)}>
-          <div>
-            {hasSimpleHeader
-              ? <div>
-                {
-                  showContent ? <FontAwesomeIcon icon="chevron-down"/> : <FontAwesomeIcon icon="chevron-right"/>
-                }&nbsp;&nbsp;
-                <ArticleAuthor article={article}/>
-              </div>
-
-              : <div>
-                <h1 className="article-detail-title">{article.subject}</h1>
-                <ArticleAuthor article={article}/>
-              </div>
+          {hasSimpleHeader && <div className="article-detail-chevron">
+            {
+              showContent ? <FontAwesomeIcon icon="chevron-down"/> : <FontAwesomeIcon icon="chevron-right"/>
             }
+          </div> }
+          {hasSimpleHeader
+            ? <ArticleAuthor article={article}/>
+
+            : <div>
+              <h1 className="article-detail-title">{article.subject}</h1>
+              <ArticleAuthor article={article}/>
+            </div>
+          }
+          <div className="article-buttons">
+            <div className="article-button">
+              <a href={`mailto:${article.author.email}`} className="no-link" onClick={e => e.stopPropagation()}>
+                <IconButton icon="reply">Reply</IconButton>
+              </a>
+            </div>
+            <div className="article-button">
+              <Link to={`/post/${groupName}/${article.number}`} className="no-link">
+                <IconButton icon="hand-point-right">Follow Up</IconButton>
+              </Link>
+            </div>
           </div>
-          <a href={`mailto:${article.author.email}`} className="no-link" onClick={e => e.stopPropagation()}>
-            <div className="article-button">
-              <IconButton icon="reply">Reply</IconButton>
-            </div>
-          </a>
-          <Link to={`/post/${groupName}/${article.number}`} className="no-link">
-            <div className="article-button">
-              <IconButton icon="hand-point-right">Follow Up</IconButton>
-            </div>
-          </Link>
         </div>
         {isContentLoading && <Loading/>}
         {showContent && <div className="article-detail-content">

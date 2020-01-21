@@ -125,6 +125,12 @@ $biggerFontSize: 1.2rem;
 
       .article-detail-author {
         font-size: $smallerFontSoze;
+        text-overflow: ellipsis;
+        overflow-wrap: break-word;
+      }
+
+      .article-detail-chevron {
+        margin-right: 0.5rem;
       }
 
       .article-detail-content {
@@ -138,8 +144,13 @@ $biggerFontSize: 1.2rem;
         }
       }
 
-      .article-button {
-        margin-left: 1rem;
+      .article-buttons {
+        display: flex;
+        flex-grow: 1;
+        justify-content: flex-end;
+        .article-button {
+          margin-left: 1rem;
+        }
       }
 
       .header {
