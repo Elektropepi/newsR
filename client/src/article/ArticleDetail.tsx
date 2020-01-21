@@ -83,7 +83,7 @@ export class ArticleDetail extends React.Component<Props, State> {
               </div>
             }
           </div>
-          <a href={`mailto:${article.author.email}`} className="no-link">
+          <a href={`mailto:${article.author.email}`} className="no-link" onClick={e => e.stopPropagation()}>
             <div className="article-button">
               <IconButton icon="reply">Reply</IconButton>
             </div>
