@@ -8,29 +8,21 @@ import {Button, Header} from "../template/Header";
 import {Footer} from "../template/Footer";
 import {IconProp} from "@fortawesome/fontawesome-svg-core";
 import {getSubscribedGroups, subscribeGroup, unsubscribeGroup} from "../localStorage/localStorage";
+import {Route, Switch} from "react-router-dom";
 
 interface StartPageState {
-  groups: Group[]
-  filteredGroups: Group[]
-  subscribedGroups: Group[]
-  listView: "subscribed" | "manage" | "all"
-  filterText: string
+  groups: Group[],
+  filterText: string,
+  subscribedGroupsName: string[]
 }
 
 export function StartPage() {
   const [state, setState] = useState<StartPageState>({
     groups: [],
-    filteredGroups: [],
-    subscribedGroups: [],
-    listView: "subscribed",
-    filterText: ""
+    filterText: "",
+    subscribedGroupsName: []
   });
   const [loading, setLoading] = useState(true);
-
-  const getSubscribtions = (groups: Group[]) => {
-    const subscribedGroupsName = getSubscribedGroups();
-    return  groups.filter(group => (subscribedGroupsName.find(s => s === group.name)))
-  }
 
   useEffect(() => {
     async function fetchData() {
@@ -38,8 +30,12 @@ export function StartPage() {
 
       const server = await Server.instance();
       const groups = await server.groups();
-      const subscribedGroups = getSubscribtions(groups);
-      setState({...state, groups, filteredGroups: state.listView === "subscribed" ? subscribedGroups : groups, subscribedGroups});
+      const subscribedGroupsName = getSubscribedGroups();
+      setState({
+        ...state,
+        groups,
+        subscribedGroupsName
+      });
 
       setLoading(false)
     }
@@ -52,75 +48,109 @@ export function StartPage() {
   }
 
   const filter = (filterText: string) => {
-    let filteredGroups = filterGroups(filterText, state.listView)
-    setState({...state, filteredGroups, filterText})
+    setState({...state, filterText})
   }
 
-  const filterGroups = (filterText: string, filterState: string) => {
-    const data = filterState === "subscribed" ? state.subscribedGroups : state.groups;
-    return  data.filter(
-      (group) => (group.name.toLowerCase().includes(filterText) || group.description.toLowerCase().includes(filterText))
-    )
-  }
-
-  const changeSubscribtionState = (group: {title: string}) => {
-    if (state.subscribedGroups.find(g => g.name === group.title)) {
+  const changeSubscriptionState = (group: { title: string }) => {
+    if (isGroupSubscribed(group.title)) {
       unsubscribeGroup(group.title);
     } else {
       subscribeGroup(group.title);
     }
-    setState({...state, subscribedGroups: getSubscribtions(state.groups)})
+    const subscribedGroupsName = getSubscribedGroups();
+    setState({...state, subscribedGroupsName})
   }
 
-  const groupIcon = (group : Group): IconProp | undefined => {
-    if (state.listView !== "manage")
-      return undefined;
-
-    if (!!state.subscribedGroups.find(g => g.name === group.name))
+  const groupIcon = (group: Group): IconProp => {
+    if (isGroupSubscribed(group.name))
       return "minus-square" as IconProp;
 
     return "plus-square" as IconProp
   }
 
   const manageButton: Button = {
-      name: "Manage groups",
-      icon: "cog",
-      onPress: () => {
-        const listView = state.listView === "manage" ? "subscribed" : "manage"
-        setState({...state, listView, filteredGroups: filterGroups(state.filterText, listView)})
-      }
-    }
+    name: "Manage groups",
+    icon: "cog",
+    url: "/groups-manage"
+  };
 
-  const subscribeButton: Button = {
-    name: state.listView === "subscribed" ? "All groups" : "Subscribed",
+  const subscriptionButton: Button = {
+    name: "Subscriptions",
     icon: "filter",
-    onPress: () => {
-      const listView = state.listView === "all" ? "subscribed" : "all"
-      setState({...state, listView, filteredGroups: filterGroups(state.filterText, listView)})
+    url: "/"
+  };
+
+  const allGroupsButton: Button = {
+    name: "All Groups",
+    icon: "filter",
+    url: "/groups"
+  };
+
+  const groupButtons: Button[] = [manageButton, subscriptionButton];
+
+  const subscriptionButtons: Button[] = [manageButton, allGroupsButton];
+
+  const manageButtons: Button[] = [allGroupsButton, subscriptionButton];
+
+  const isGroupFiltered = (group: Group) => {
+    const {filterText} = state;
+    if(filterText === "") {
+      return true;
     }
+    return (group.name.toLowerCase().includes(filterText) || group.description.toLowerCase().includes(filterText));
   }
 
-  const getButtons = (): Button[] => {
-    if (state.listView === "manage")
-      return [manageButton]
-
-    return [manageButton, subscribeButton]
+  const isGroupSubscribed = (groupName: string) => {
+    return state.subscribedGroupsName.includes(groupName);
   }
+
+  const getGroups = (isSubscription?: boolean): Group[] => {
+    return state.groups.filter(group => isGroupFiltered(group) && (isSubscription !== true || isGroupSubscribed(group.name)));
+  } ;
 
   return (
     <div className="app-grid">
       <Helmet>
         <title>newsR - news.tugraz.at</title>
       </Helmet>
-      <Header name={"news.tugraz.at"} searchBar={{filter}} buttons={getButtons()}/>
+      <Switch>
+        <Route path="/groups">
+          <Header name={"news.tugraz.at"} searchBar={{filter}} buttons={groupButtons}/>
+        </Route>
+        <Route path="/groups-manage">
+          <Header name={"news.tugraz.at"} searchBar={{filter}} buttons={manageButtons}/>
+        </Route>
+        <Route path="/">
+          <Header name={"news.tugraz.at"} searchBar={{filter}} buttons={subscriptionButtons}/>
+        </Route>
+      </Switch>
       <div className="app-grid-body">
-        <List data={state.filteredGroups.map((group) => ({
-          title: group.name,
-          subtitle: group.description,
-          url: state.listView === "manage" ? "" : `/groups/${group.name}`,
-          onPress: state.listView === "manage" ? changeSubscribtionState : undefined,
-          icon: groupIcon(group)
-        }))}/>
+        <Switch>
+          <Route path="/groups">
+            <List data={getGroups().map((group) => ({
+              title: group.name,
+              subtitle: group.description,
+              url: `/groups/${group.name}`
+            }))}/>
+          </Route>
+          <Route path="/groups-manage">
+            <List data={getGroups().map((group) => ({
+              title: group.name,
+              subtitle: group.description,
+              url: "",
+              onPress: changeSubscriptionState,
+              icon: groupIcon(group)
+            }))}/>
+          </Route>
+          <Route path="/">
+            <List data={getGroups(true).map((group) => ({
+              title: group.name,
+              subtitle: group.description,
+              url: `/groups/${group.name}`
+            }))}/>
+          </Route>
+        </Switch>
+
       </div>
       <Footer/>
     </div>

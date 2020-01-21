@@ -2,8 +2,8 @@ import React, {ReactNode} from 'react';
 import './App.scss';
 import {GroupDetail} from "./group/GroupDetail";
 import {Route, Switch} from "react-router-dom"
-import {Root} from "./startPage/Root";
 import {Post} from "./post/Post";
+import {StartPage} from "./startPage/StartPage";
 
 
 export default class App extends React.Component {
@@ -13,7 +13,7 @@ export default class App extends React.Component {
         <Switch>
           <Route path="/groups/:name" component={GroupDetail}/>
           <Route path="/post/:name/:number?" component={Post}/>
-          <Route path="/" component={Root}/>
+          <Route path="/" component={StartPage}/>
         </Switch>
       </div>
     );

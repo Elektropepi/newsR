@@ -1,16 +1,9 @@
 import * as React from "react";
 import {Link} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {IconProp} from "@fortawesome/fontawesome-svg-core";
+import {ListType} from "./List";
 
-export function ListEntry<T extends {
-  url: string
-  title: string
-  subtitle?: string
-  bold?: boolean
-  icon?: IconProp
-  onPress?: (entry: T) => void
-}>(props: {
+export function ListEntry<T extends ListType<T>>(props: {
   entry: T
 }) {
   const {entry} = props;

@@ -1,7 +1,6 @@
 import React from "react";
 import {ArticleId, ArticleInterface} from "./Article";
 import {CollapsibleThreadListEntry} from "./CollapsibleThreadListEntry";
-import {ArticleDetail} from "./ArticleDetail";
 
 
 interface State {

@@ -63,7 +63,7 @@ export class ArticleDetail extends React.Component<Props, State> {
   }
 
   render() {
-    const {article, showContent, onClickHeader, hasSimpleHeader, baseUrl, groupName} = this.props;
+    const {article, showContent, onClickHeader, hasSimpleHeader, groupName} = this.props;
     const {contents, attachments, isContentLoading} = this.state;
     return (
       <div className="article-detail">
