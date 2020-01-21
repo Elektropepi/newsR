@@ -10,7 +10,7 @@ export function ListEntry<T extends ListType<T>>(props: {
 
   return (
     <div onClick={() => entry.onPress ? entry.onPress(entry) : undefined}>
-      <p className={"list-entry"}>
+      <div className={"list-entry"}>
         {entry.icon &&
           <div className="float">
             <FontAwesomeIcon icon={entry.icon}/>
@@ -20,7 +20,7 @@ export function ListEntry<T extends ListType<T>>(props: {
           <span className={"title" + (entry.bold ? " bold" : "")}>{entry.title}</span><br/>
           <span className={"subtitle" + (entry.bold ? " bold" : "")}>{entry.subtitle}</span>
         </Link>
-      </p>
+      </div>
     </div>
 
   )
