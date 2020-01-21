@@ -8,7 +8,7 @@ import {Button, Header} from "../template/Header";
 import {Footer} from "../template/Footer";
 import {IconProp} from "@fortawesome/fontawesome-svg-core";
 import {getSubscribedGroups, subscribeGroup, unsubscribeGroup} from "../localStorage/localStorage";
-import {Route, Switch} from "react-router-dom";
+import {Link, Route, Switch} from "react-router-dom";
 
 interface StartPageState {
   groups: Group[],
@@ -143,11 +143,17 @@ export function StartPage() {
             }))}/>
           </Route>
           <Route path="/">
-            <List data={getGroups(true).map((group) => ({
-              title: group.name,
-              subtitle: group.description,
-              url: `/groups/${group.name}`
-            }))}/>
+            {state.subscribedGroupsName.length === 0
+              ? <div className="no-thread">
+                <div className="no-thread-text">
+                  Welcome to newsR - <Link to={`/groups-manage`}>Subscribe to a newsgroup</Link> to get started!
+                </div>
+              </div>
+            : <List data={getGroups(true).map((group) => ({
+                title: group.name,
+                subtitle: group.description,
+                url: `/groups/${group.name}`
+              }))}/>}
           </Route>
         </Switch>
 
