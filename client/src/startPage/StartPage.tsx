@@ -41,11 +41,14 @@ export function StartPage() {
     }
 
     fetchData();
-  }, []);
+  },
+    // doesn't work with [state]? 
+    // eslint-disable-next-line
+    []);
 
   const filter = (filterText: string) => {
     setState({...state, filterText})
-  }
+  };
 
   const changeSubscriptionState = (group: { title: string }) => {
     if (isGroupSubscribed(group.title)) {
@@ -55,14 +58,14 @@ export function StartPage() {
     }
     const subscribedGroupsName = getSubscribedGroups();
     setState({...state, subscribedGroupsName})
-  }
+  };
 
   const groupIcon = (group: Group): IconProp => {
     if (isGroupSubscribed(group.name))
       return "minus-square" as IconProp;
 
     return "plus-square" as IconProp
-  }
+  };
 
   const manageButton: Button = {
     name: "Manage groups",
@@ -94,11 +97,11 @@ export function StartPage() {
       return true;
     }
     return (group.name.toLowerCase().includes(filterText) || group.description.toLowerCase().includes(filterText));
-  }
+  };
 
   const isGroupSubscribed = (groupName: string) => {
     return state.subscribedGroupsName.includes(groupName);
-  }
+  };
 
   const getGroups = (isSubscription?: boolean): Group[] => {
     return state.groups.filter(group => isGroupFiltered(group) && (isSubscription !== true || isGroupSubscribed(group.name)));

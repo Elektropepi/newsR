@@ -211,14 +211,13 @@ $biggerFontSize: 1.2rem;
   }
 
   .app-grid {
-    display: grid;
-    grid-template-rows: $headerHeight auto $footerHeight;
-    grid-template-areas: "header" "body" "footer";
 
     .app-grid-header {
-      grid-area: header;
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
+      height: $headerHeight;
       z-index: 10;
       color: lighten($paper, 30%);
       background: $primaryGreen;
@@ -263,15 +262,16 @@ $biggerFontSize: 1.2rem;
     }
 
     .app-grid-body {
-      grid-area: body;
-      min-width: 0;
-      min-height: $bodyHeight;
+      margin-top: $headerHeight;
+      margin-bottom: $footerHeight;
     }
 
     .app-grid-footer {
-      grid-area: footer;
-      position: sticky;
+      height: $footerHeight;
+      position: fixed;
       bottom: 0;
+      left: 0;
+      right: 0;
       z-index: 10;
       color: lighten($paper, 30%);
       background: $primaryGreen;
