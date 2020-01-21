@@ -43,10 +43,6 @@ export function StartPage() {
     fetchData();
   }, []);
 
-  if (loading) {
-    return <Loading/>;
-  }
-
   const filter = (filterText: string) => {
     setState({...state, filterText})
   }
@@ -94,7 +90,7 @@ export function StartPage() {
 
   const isGroupFiltered = (group: Group) => {
     const {filterText} = state;
-    if(filterText === "") {
+    if (filterText === "") {
       return true;
     }
     return (group.name.toLowerCase().includes(filterText) || group.description.toLowerCase().includes(filterText));
@@ -106,7 +102,7 @@ export function StartPage() {
 
   const getGroups = (isSubscription?: boolean): Group[] => {
     return state.groups.filter(group => isGroupFiltered(group) && (isSubscription !== true || isGroupSubscribed(group.name)));
-  } ;
+  };
 
   return (
     <div className="app-grid">
@@ -125,38 +121,40 @@ export function StartPage() {
         </Route>
       </Switch>
       <div className="app-grid-body">
-        <Switch>
-          <Route path="/groups">
-            <List data={getGroups().map((group) => ({
-              title: group.name,
-              subtitle: group.description,
-              url: `/groups/${group.name}`
-            }))}/>
-          </Route>
-          <Route path="/groups-manage">
-            <List data={getGroups().map((group) => ({
-              title: group.name,
-              subtitle: group.description,
-              url: "",
-              onPress: changeSubscriptionState,
-              icon: groupIcon(group)
-            }))}/>
-          </Route>
-          <Route path="/">
-            {state.subscribedGroupsName.length === 0
-              ? <div className="no-thread">
-                <div className="no-thread-text">
-                  Welcome to newsR - <Link to={`/groups-manage`}>Subscribe to a newsgroup</Link> to get started!
-                </div>
-              </div>
-            : <List data={getGroups(true).map((group) => ({
-                title: group.name,
-                subtitle: group.description,
-                url: `/groups/${group.name}`
-              }))}/>}
-          </Route>
-        </Switch>
-
+        {
+          loading ? <Loading/> :
+            <Switch>
+              <Route path="/groups">
+                <List data={getGroups().map((group) => ({
+                  title: group.name,
+                  subtitle: group.description,
+                  url: `/groups/${group.name}`
+                }))}/>
+              </Route>
+              <Route path="/groups-manage">
+                <List data={getGroups().map((group) => ({
+                  title: group.name,
+                  subtitle: group.description,
+                  url: "",
+                  onPress: changeSubscriptionState,
+                  icon: groupIcon(group)
+                }))}/>
+              </Route>
+              <Route path="/">
+                {state.subscribedGroupsName.length === 0
+                  ? <div className="no-thread">
+                    <div className="no-thread-text">
+                      Welcome to newsR - <Link to={`/groups-manage`}>Subscribe to a newsgroup</Link> to get started!
+                    </div>
+                  </div>
+                  : <List data={getGroups(true).map((group) => ({
+                    title: group.name,
+                    subtitle: group.description,
+                    url: `/groups/${group.name}`
+                  }))}/>}
+              </Route>
+            </Switch>
+        }
       </div>
       <Footer/>
     </div>

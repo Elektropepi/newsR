@@ -54,78 +54,79 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
 
   render() {
     const {match} = this.props;
-    const {loading, group, threads, filteredThreads} = this.state;
-
-    if (loading) {
-      return (<Loading/>);
-    }
-
-    if (group === null) {
-      return "Group not found!";
-    }
+    const {group, loading, threads, filteredThreads} = this.state;
 
     const filter = (text: string) => {
       const filteredThreads = threads.filter(
         (article) => article.subject.toLowerCase().includes(text) || article.author.name.toLowerCase().includes(text)
-      )
+      );
       this.setState({filteredThreads})
-    }
+    };
 
-    const articleListData = filteredThreads.map(article => ({
-      title: article.subject,
-      subtitle: `${article.author.name} - ${article.date.format('DD.MM.YY HH:mm')}`,
-      url: `${match.url}/${article.number}`,
-      bold: !this.state.readArticles.find(a => a === article.id),
-      onPress: () => {
-        addReadArticle(group.name, article.id);
-        this.setState({readArticles: this.state.readArticles.concat(article.id)})
-      }
-    }));
+    const articleListData = group === null
+      ? []
+      : filteredThreads.map(article => ({
+        title: article.subject,
+        subtitle: `${article.author.name} - ${article.date.format('DD.MM.YY HH:mm')}`,
+        url: `${match.url}/${article.number}`,
+        bold: !this.state.readArticles.find(a => a === article.id),
+        onPress: () => {
+          addReadArticle(group.name, article.id);
+          this.setState({readArticles: this.state.readArticles.concat(article.id)})
+        }
+      }));
 
     const buttons: Button[] = [
       {
         name: "Write",
         icon: "pencil-alt",
-        url: `/post/${group.name}`
+        url: group === null ? "" : `/post/${group.name}`
       }
-    ]
+    ];
+
+    const groupName = group === null ? match.params.name : group.name;
 
     return (
       <div className="app-grid">
         <Helmet>
-          <title>newsR - {group?.name}</title>
+          <title>newsR - {groupName}</title>
         </Helmet>
-        <Header name={group.name} searchBar={{filter}} url={match.url} buttons={buttons}/>
+        <Header name={groupName} searchBar={{filter}} url={match.url} buttons={buttons}/>
         <div className="app-grid-body">
-          <Media query={SMALL_SCREEN_QUERY}>
-            {
-              screenIsSmall => screenIsSmall
-                ?
-                <Switch>
-                  <Route path={`${match.path}/:number`} render={props =>
-                    <ThreadDetail {...props} group={group}
-                                  article={threads.find(thread => thread.number === parseInt(props.match.params.number))
-                                    || null}/>
-                  }/>
-                  <Route path={`${match.path}`}>
-                    <List data={articleListData}/>
-                  </Route>
-                </Switch>
-                :
-                <SidebarContent
-                  sidebar={<List data={articleListData}/>}
-                  content={
+          {
+            loading
+              ? <Loading/>
+              : (group === null ? "Group not found!" :
+              <Media query={SMALL_SCREEN_QUERY}>
+                {
+                  screenIsSmall => screenIsSmall
+                    ?
                     <Switch>
                       <Route path={`${match.path}/:number`} render={props =>
                         <ThreadDetail {...props} group={group}
                                       article={threads.find(thread => thread.number === parseInt(props.match.params.number))
-                                        || null}/>
+                                      || null}/>
                       }/>
-                      <NoThread url={match.path} groupName={group.name}/>
+                      <Route path={`${match.path}`}>
+                        <List data={articleListData}/>
+                      </Route>
                     </Switch>
-                  }/>
-            }
-          </Media>
+                    :
+                    <SidebarContent
+                      sidebar={<List data={articleListData}/>}
+                      content={
+                        <Switch>
+                          <Route path={`${match.path}/:number`} render={props =>
+                            <ThreadDetail {...props} group={group}
+                                          article={threads.find(thread => thread.number === parseInt(props.match.params.number))
+                                          || null}/>
+                          }/>
+                          <NoThread url={match.path} groupName={group.name}/>
+                        </Switch>
+                      }/>
+                }
+              </Media>)
+          }
         </div>
         <Footer/>
       </div>

@@ -1,13 +1,12 @@
 import React, {ChangeEvent, FormEvent} from "react";
 import {Server} from "../server/Server";
 import {Author} from "../author/Author";
-import {RouteComponentProps} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {Group} from "../group/Group";
 import {Article} from "../article/Article";
 import {Loading} from "../template/Loading";
 import {Helmet} from "react-helmet";
 import {Header} from "../template/Header";
-import {withRouter} from 'react-router-dom'
 
 interface State {
   loading: boolean;
@@ -112,20 +111,7 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
     const {match} = this.props;
     const {group, article, loading, subject, author, content, sending, done} = this.state;
 
-    if (loading) {
-      return <Loading/>;
-    }
-
-    if (!group) {
-      // todo: error page
-      return (
-        <div>
-          Error: no group found.
-        </div>
-      );
-    }
-
-    let headerText = group.name;
+    let headerText = group === null ? match.params.name : group.name;
     if (article) {
       headerText += ` ${article.number} follow up`
     }
@@ -135,51 +121,53 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
     return (
       <div className="app-grid">
         <Helmet>
-          <title>newsR - {group?.name}</title>
+          <title>newsR - headerText</title>
         </Helmet>
-        <Header name={headerText} url={match.url} />
+        <Header name={headerText} url={match.url}/>
         <div className="app-grid-body">
-          <form className="postArticle" onSubmit={(event: FormEvent<HTMLFormElement>) => this.send(event)}>
-            <div className="inputGroup">
-              <input
-                name="author"
-                type="text"
-                placeholder="Name <mail@provider.tld>"
-                value={author}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  this.setState({
-                    author: event.currentTarget.value
-                  })
-                }}
-              />
-            </div>
-            <div className="inputGroup">
-              <input
-                name="subject"
-                type="text"
-                placeholder="Subject: …"
-                value={subject}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  this.setState({
-                    subject: event.currentTarget.value
-                  })
-                }}
-              />
-            </div>
-            <div className="inputGroup">
-              <input name="group" type="text" value={group.name} readOnly tabIndex={-1} />
-            </div>
-            {article && (
-              <div className="inputGroup">
-                <input
-                  name="followup to"
-                  type="text"
-                  value={article?.references.concat(article.id).join(' ')}
-                  readOnly
-                />
-              </div>
-            )}
-            <div className="inputGroup">
+          {
+            loading ? <Loading/> : (group === null ? "Group not found" :
+              <form className="postArticle" onSubmit={(event: FormEvent<HTMLFormElement>) => this.send(event)}>
+                <div className="inputGroup">
+                  <input
+                    name="author"
+                    type="text"
+                    placeholder="Name <mail@provider.tld>"
+                    value={author}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                      this.setState({
+                        author: event.currentTarget.value
+                      })
+                    }}
+                  />
+                </div>
+                <div className="inputGroup">
+                  <input
+                    name="subject"
+                    type="text"
+                    placeholder="Subject: …"
+                    value={subject}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                      this.setState({
+                        subject: event.currentTarget.value
+                      })
+                    }}
+                  />
+                </div>
+                <div className="inputGroup">
+                  <input name="group" type="text" value={group.name} readOnly tabIndex={-1}/>
+                </div>
+                {article && (
+                  <div className="inputGroup">
+                    <input
+                      name="followup to"
+                      type="text"
+                      value={article?.references.concat(article.id).join(' ')}
+                      readOnly
+                    />
+                  </div>
+                )}
+                <div className="inputGroup">
               <textarea
                 value={content}
                 onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -188,20 +176,21 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
                   })
                 }}
               />
-            </div>
-            <div className="inputGroup">
-              <button className="submit" type="submit" disabled={sending || done}>Post</button>
-              <button className="back" type="reset" onClick={() => this.props.history.goBack()}>Go back</button>
-            </div>
-            <div>
-              {sending && !done && (
-                <span>Sending..</span>
-              )}
-              {done && (
-                <span>Send</span>
-              )}
-            </div>
-          </form>
+                </div>
+                <div className="inputGroup">
+                  <button className="submit" type="submit" disabled={sending || done}>Post</button>
+                  <button className="back" type="reset" onClick={() => this.props.history.goBack()}>Go back</button>
+                </div>
+                <div>
+                  {sending && !done && (
+                    <span>Sending..</span>
+                  )}
+                  {done && (
+                    <span>Send</span>
+                  )}
+                </div>
+              </form>)
+          }
         </div>
       </div>
     );
