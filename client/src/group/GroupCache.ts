@@ -64,7 +64,7 @@ export class GroupCache {
   }
 
   // todo: fix overview type
-  public async persistOverArticles(server: string, group: string, overviewArticles: any[]) {
+  public async persistOverArticles(server: string, group: string, overviewArticles: Article[]) {
     overviewArticles.forEach((overArticle: any) => this.persistOverArticle(server, group, overArticle));
   }
 

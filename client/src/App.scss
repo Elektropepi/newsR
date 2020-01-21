@@ -13,6 +13,8 @@ $primaryGray: #A5A5A5;
 $headerHeight: 7rem;
 $footerHeight: 2rem;
 
+$standardFontSize: 1.3rem;
+
 .app {
   color: $fontColor;
 
@@ -119,7 +121,7 @@ $footerHeight: 2rem;
 
       .article-detail-content {
         padding: 1rem;
-        font-size: 1.3rem;
+        font-size: $standardFontSize;
 
         .nested-content {
           margin-left: 1rem;
@@ -235,7 +237,7 @@ $footerHeight: 2rem;
       }
 
       .icon {
-        font-size: 1.3rem;
+        font-size: $standardFontSize;
         padding: 1.65rem 1rem 1.65rem 1rem;
         float: right;
       }
@@ -261,6 +263,57 @@ $footerHeight: 2rem;
   .search {
     margin-top: 1rem;
     font-size: 1rem;
+  }
+}
+
+.attachments {
+  img: {
+    max-width: 100%;
+  }
+}
+
+form.postArticle {
+  width: 100%;
+  max-width: 40rem;
+
+  .inputGroup {
+    display: flex;
+    justify-content: center;
+    margin: 1rem;
+  }
+
+  input, textarea {
+    border: 1px solid $primaryGreen;
+    font-size: $standardFontSize;
+    flex-grow: 2;
+    padding: 0.5rem;
+  }
+
+  textarea {
+    min-height: 10rem;
+    resize: vertical;
+    flex-grow: 2;
+  }
+
+  button {
+    color: white;
+    background-color: $primaryGreen;
+    padding: 1rem;
+    border: 1px solid $primaryGreen;
+    font-size: $standardFontSize;
+    display: inline-block;
+    flex-grow: 2;
+    margin-right: 1rem;
+    cursor: pointer;
+
+    &.back {
+      background-color: white;
+      color: $fontColor;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }
 

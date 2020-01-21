@@ -12,7 +12,7 @@ export default class App extends React.Component {
       <div className="app">
         <Switch>
           <Route path="/groups/:name" component={GroupDetail}/>
-          <Route path="/post/" component={Post}/>
+          <Route path="/post/:name/:number?" component={Post}/>
           <Route path="/" component={Root}/>
         </Switch>
       </div>

@@ -14,18 +14,21 @@ export type Button = {
 export function Header(props: {
   name: string
   url?: string
-  searchBar: {
+  searchBar?: {
     filter: (value: string) => void
   }
   buttons?: Button[]
 }) {
+  const {searchBar} = props;
   return (
     <div className="app-grid-header">
       <Logo/>
       <div className="float">
         <Heading name={props.name} url={props.url}/>
+        {searchBar && searchBar.filter &&
         <input className="search" type="text" placeholder="Search..."
-               onChange={(e) => props.searchBar.filter(e.target.value.toLowerCase())}/>
+               onChange={(e) => searchBar.filter(e.target.value.toLowerCase())}/>
+        }
       </div>
       {props.buttons && props.buttons.map((button, index) => <Button key={index} icon={button.icon} name={button.name} url={button.url} onPress={button.onPress}/>
       )}
