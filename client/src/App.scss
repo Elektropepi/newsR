@@ -293,11 +293,11 @@ $biggerFontSize: 1.2rem;
   }
 }
 
-form.postArticle {
+form.post-article {
   width: 100%;
   max-width: 40rem;
 
-  .inputGroup {
+  .input-group {
     display: flex;
     justify-content: center;
     margin: 1rem;
@@ -326,6 +326,10 @@ form.postArticle {
     flex-grow: 2;
     margin-right: 1rem;
     cursor: pointer;
+
+    &:disabled {
+      background-color: $primaryGray;
+    }
 
     &.back {
       background-color: white;

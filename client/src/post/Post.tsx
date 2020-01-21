@@ -7,6 +7,7 @@ import {Article} from "../article/Article";
 import {Loading} from "../template/Loading";
 import {Helmet} from "react-helmet";
 import {Header} from "../template/Header";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface State {
   loading: boolean;
@@ -127,8 +128,8 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
         <div className="app-grid-body">
           {
             loading ? <Loading/> : (group === null ? "Group not found" :
-              <form className="postArticle" onSubmit={(event: FormEvent<HTMLFormElement>) => this.send(event)}>
-                <div className="inputGroup">
+              <form className="post-article" onSubmit={(event: FormEvent<HTMLFormElement>) => this.send(event)}>
+                <div className="input-group">
                   <input
                     name="author"
                     type="text"
@@ -141,7 +142,7 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
                     }}
                   />
                 </div>
-                <div className="inputGroup">
+                <div className="input-group">
                   <input
                     name="subject"
                     type="text"
@@ -154,20 +155,20 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
                     }}
                   />
                 </div>
-                <div className="inputGroup">
+                <div className="input-group">
                   <input name="group" type="text" value={group.name} readOnly tabIndex={-1}/>
                 </div>
                 {article && (
-                  <div className="inputGroup">
+                  <div className="input-group">
                     <input
                       name="followup to"
-                      type="text"
+                      type="hidden"
                       value={article?.references.concat(article.id).join(' ')}
                       readOnly
                     />
                   </div>
                 )}
-                <div className="inputGroup">
+                <div className="input-group">
               <textarea
                 value={content}
                 onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -177,17 +178,14 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
                 }}
               />
                 </div>
-                <div className="inputGroup">
-                  <button className="submit" type="submit" disabled={sending || done}>Post</button>
+                <div className="input-group">
+                  <button className="submit" type="submit" disabled={sending || done}>
+                    {
+                      sending ? <FontAwesomeIcon icon="spinner" spin />
+                      : (done ? "Sent!" : "Post")
+                    }
+                  </button>
                   <button className="back" type="reset" onClick={() => this.props.history.goBack()}>Go back</button>
-                </div>
-                <div>
-                  {sending && !done && (
-                    <span>Sending..</span>
-                  )}
-                  {done && (
-                    <span>Send</span>
-                  )}
                 </div>
               </form>)
           }
