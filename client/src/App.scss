@@ -10,10 +10,12 @@ $primaryGreen: #196A41;
 $secondaryGreen: #489370;
 $primaryGray: #A5A5A5;
 
-$headerHeight: 7rem;
+$headerHeight: 6.5rem;
 $footerHeight: 2rem;
 
-$standardFontSize: 1.3rem;
+$smallerFontSoze: 0.9rem;
+$standardFontSize: 1rem;
+$biggerFontSize: 1.2rem;
 
 .app {
   color: $fontColor;
@@ -30,7 +32,7 @@ $standardFontSize: 1.3rem;
 
     .loading {
       padding: 1rem;
-      font-size: 1.2rem;
+      font-size: $biggerFontSize;
       text-align: center;
       color: $primaryGreen;
     }
@@ -53,13 +55,18 @@ $standardFontSize: 1.3rem;
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: $biggerFontSize;
     font-weight: normal;
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: $biggerFontSize;
     font-weight: normal;
+    width: fit-content;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .header {
@@ -90,11 +97,11 @@ $standardFontSize: 1.3rem;
     }
 
     .title {
-      font-size: 1.2rem;
+      font-size: $biggerFontSize;
     }
 
     .subtitle {
-      font-size: 0.9rem;
+      font-size: $smallerFontSoze;
     }
 
     .bold {
@@ -116,7 +123,7 @@ $standardFontSize: 1.3rem;
       white-space: pre-line;
 
       .article-detail-author {
-        font-size: 0.9rem;
+        font-size: $smallerFontSoze;
       }
 
       .article-detail-content {
@@ -147,7 +154,7 @@ $standardFontSize: 1.3rem;
       }
 
       .article-detail-title {
-        font-size: 1.5rem;
+        font-size: $biggerFontSize;
       }
 
       .collapsible-line {
@@ -178,7 +185,7 @@ $standardFontSize: 1.3rem;
   }
 
   .no-thread-text {
-    font-size: 1.5rem;
+    font-size: $biggerFontSize;
     text-align: center;
     color: $primaryGreen
   }
@@ -227,18 +234,29 @@ $standardFontSize: 1.3rem;
       }
 
       img {
-        height: 4rem;
-        margin: 0.3rem;
+        width: 3rem;
+        margin-top: 0.8rem;
+        margin-bottom: 0.8rem;
       }
 
       .float {
         float: left;
         margin: 0.2rem 1rem 0.2rem 0.5rem;
+        width: 48%;
+      }
+
+      .logo {
+        float: left;
+        margin-right: 0.8rem;
+        width: available;
       }
 
       .icon {
-        font-size: $standardFontSize;
-        padding: 1.65rem 1rem 1.65rem 1rem;
+        font-size: $biggerFontSize;
+        padding-top: 1.65rem;
+        padding-right: 0.8rem;
+        padding-left: 0.8rem;
+        padding-bottom: 1.65rem;
         float: right;
       }
     }
@@ -261,8 +279,9 @@ $standardFontSize: 1.3rem;
   }
 
   .search {
-    margin-top: 1rem;
-    font-size: 1rem;
+    margin-top: 0.8rem;
+    font-size: $standardFontSize;
+    max-width: 100%;
   }
 }
 
@@ -300,7 +319,7 @@ form.postArticle {
     background-color: $primaryGreen;
     padding: 1rem;
     border: 1px solid $primaryGreen;
-    font-size: $standardFontSize;
+    font-size: $biggerFontSize;
     display: inline-block;
     flex-grow: 2;
     margin-right: 1rem;

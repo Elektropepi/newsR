@@ -38,7 +38,7 @@ export function Header(props: {
 
 function Logo() {
   return (
-    <div className="float">
+    <div className="logo">
       <Link className="no-link" to={'/'}>
         <img src={logo} alt="Logo"/>
       </Link>
