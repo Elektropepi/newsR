@@ -8,28 +8,20 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {
   faChevronDown,
   faChevronRight,
+  faCog,
   faHandPointRight,
   faHome,
-  faReply,
-  faSpinner,
-  faPencilAlt,
-  faCog,
+  faList,
   faMinusSquare,
+  faPencilAlt,
   faPlusSquare,
-  faList
+  faReply,
+  faSpinner
 } from '@fortawesome/free-solid-svg-icons'
+import {faGithub} from '@fortawesome/free-brands-svg-icons'
 
-library.add(faSpinner);
-library.add(faHome);
-library.add(faReply);
-library.add(faHandPointRight);
-library.add(faChevronRight);
-library.add(faChevronDown);
-library.add(faPencilAlt);
-library.add(faCog);
-library.add(faMinusSquare);
-library.add(faPlusSquare);
-library.add(faList);
+library.add(faChevronDown, faChevronRight, faHandPointRight, faHome, faReply, faSpinner, faPencilAlt, faCog, faMinusSquare,
+  faPlusSquare, faList, faGithub);
 ReactDOM.render(
   <HashRouter basename={process.env.REACT_APP_BASE_URL}>
     <App/>

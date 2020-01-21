@@ -83,3 +83,17 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+# Impressum
+“NewsR” is the newsreader Web App created under the MIT license bootsrapped by using Creat React App where the server
+communicates with the client via a NNTP.
+
+## Publisher
+Paul Ganster, Peter Grassbeger, Ana López  Camarero, Magdalena Mayerhofer. 
+
+Created at Technical University Graz.
+
+## Technical implementation and layout
+Github Link: https://github.com/Elektropepi/newsR
+
+Website: https://elektropepi.github.io/newsR
