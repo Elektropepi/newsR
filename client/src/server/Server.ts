@@ -184,7 +184,7 @@ export class Server implements ServerInterface {
 
   public async groups(): Promise<Group[]> {
     // todo: remove 'tu-graz*' once https://gitlab.com/timrs2998/newsie/merge_requests/2 is merged
-    const newsgroups = await this.newsieClient.listNewsgroups('tu-graz*');
+    const newsgroups = await this.newsieClient.listNewsgroups(process.env.REACT_APP_NNTP_GROUP_PREFIX);
     return newsgroups.newsgroups.map((ng) => {
       const description = typeof ng.description === 'undefined' ? '' : ng.description;
       return new Group(ng.name, description, this.host, this.newsieClient);

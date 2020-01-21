@@ -27,6 +27,7 @@ The client communicates with the NodeJS server in `server/` and displays newsgro
 - `REACT_APP_WS_TO_NNTP_URL`: url of the intermediate server with websocket protocol
 - `REACT_APP_NNTP_URL`: url of the news server (without protocol)
 - `REACT_APP_NNTP_PORT`: port of the news server
+- `REACT_APP_NNTP_GROUP_PREFIX`: the prefix of groups you want show
 
 ### IntelliJ specifics
 To get IntelliJ working with the TypeScript settings configured in `client/tsconfig.json`, one needs to configure
