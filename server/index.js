@@ -13,15 +13,45 @@ function findCommand(str) {
 const port = process.env.PORT || 8080;
 console.log('Starting with port: ' + port);
 
+const keepAliveInterval = 1000; // 1 second
+const killConnectionInterval = 1000 * 30; // 30 seconds
+
 const server = new WebSocket.Server({
   port: port
 });
 
+function resetKillInterval(killInterval, ws) {
+  clearInterval(killInterval);
+  return setInterval(() => {
+    ws.close();
+  }, killConnectionInterval);
+}
+
 server.on('connection', function connection(ws) {
   let newsie;
 
+  const pingInterval = setInterval(() => {
+    ws.ping();
+  }, keepAliveInterval);
+
+  let killInterval = resetKillInterval(null, ws);
+
+  ws.on('close', () => {
+    clearInterval(pingInterval);
+    clearInterval(killInterval);
+    if (newsie) {
+      newsie.disconnect();
+    }
+  });
+
+  ws.on('pong', () => {
+    killInterval = resetKillInterval(killInterval, ws);
+  });
+
   let previousCommand = '';
   ws.on('message', async function incoming(message) {
+    killInterval = resetKillInterval(killInterval, ws);
+
     if (message.startsWith('NNTPCONNECT')) {
       const messageSplit = message.split(" ");
       newsie = new Newsie({

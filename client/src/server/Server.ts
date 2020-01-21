@@ -1,5 +1,6 @@
 import Newsie, {Command, Options as NewsieOptions} from 'newsie';
 import {Group, GroupInterface} from "../group/Group";
+import {TlsOptions} from "tls";
 
 interface ResponseHandler {
   callback: Function
@@ -12,6 +13,7 @@ class WsConnection {
   private readonly _host: string;
   private readonly _port: number;
   private _queue: ResponseHandler[];
+  private onCloseCallback: any;
 
   // todo: type tlsOptions: TlsOptions
   constructor(host: string, port: number, tlsPort: boolean, tlsOptions: any) {
@@ -58,6 +60,10 @@ class WsConnection {
     this._queue.push({callback, resolve, reject})
   };
 
+  public setOnCloseCallback(callback: any) {
+    this.onCloseCallback = callback;
+  };
+
   private _addSocketHandlers = (): void => {
     this._socket.onmessage = (event) => {
       const responseHandler = this._queue[0];
@@ -71,8 +77,10 @@ class WsConnection {
       throw err;
     };
     this._socket.onclose = () => {
+      console.error('WS: Connection closed');
       this._queue.forEach(h => h.reject(new Error('Connection closed')));
       //this._socket.removeEventListener()
+      this.onCloseCallback();
     };
   };
 
@@ -89,7 +97,11 @@ class WsNewsie extends Newsie {
       tlsPort = false,
       tlsOptions = {}
     } = options;
-    this._wsConnection = new WsConnection(host, port, tlsPort, tlsOptions)
+    this._wsConnection = new WsConnection(host, port, tlsPort, tlsOptions);
+  }
+
+  public setOnCloseCallback(callback: any) {
+    this._wsConnection.setOnCloseCallback(callback);
   }
 
   public connect = async (): Promise<any> => {
@@ -125,16 +137,17 @@ export interface ServerInterface {
 
 export class Server implements ServerInterface {
   private static server: Server | null = null;
+  private static keepaliveIntervalReference: NodeJS.Timeout | null = null;
   public readonly host: string;
   public readonly port: number | undefined;
-  private readonly newsieClient: WsNewsie;
+  private newsieClient: WsNewsie;
 
   constructor(host: string, port?: number) {
     this.host = host;
     if (port) {
       this.port = port;
     }
-    this.newsieClient = Server.initWsNewsieClient(this.host, this.port);
+    this.newsieClient = this.initWsNewsieClient(this.host, this.port);
   }
 
   public static async instance(): Promise<Server> {
@@ -150,17 +163,23 @@ export class Server implements ServerInterface {
     return this.server;
   }
 
-  private static initWsNewsieClient(host: string, port?: number | undefined): WsNewsie {
+  private initWsNewsieClient(host: string, port?: number | undefined): WsNewsie {
     const newsieOptions: NewsieOptions = {
       host
     };
     if (port && !isNaN(port)) {
       newsieOptions.port = port;
     }
-    return new WsNewsie(newsieOptions);
+    this.newsieClient = new WsNewsie(newsieOptions);
+    this.newsieClient.setOnCloseCallback(() => {
+      console.log('WS: Reconnect!');
+      this.initWsNewsieClient(host, port);
+      this.connectAndVerifyNewsieClient();
+    });
+    return this.newsieClient;
   }
 
-  public async connectAndVerifyNewsieClient() {
+  private async connectAndVerifyNewsieClient(): Promise<WebSocket> {
     const connection = await this.newsieClient.connect();
     if (connection.code !== 200) {
       throw Error('No connection to server.');
@@ -169,6 +188,7 @@ export class Server implements ServerInterface {
     if (!capabilities.capabilities.LIST.includes('NEWSGROUPS')) {
       throw Error('Server does\'t have the required LIST NEWSGROUPS capability.');
     }
+    return connection.socket;
   }
 
   public async getGroupByName(name: string): Promise<Group | null> {
