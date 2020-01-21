@@ -125,6 +125,8 @@ export interface ServerInterface {
 
 export class Server implements ServerInterface {
   private static server: Server | null = null;
+  private static keepaliveIntervalMs: 10000;
+  private static keepaliveIntervalReference: NodeJS.Timeout | null = null;
   public readonly host: string;
   public readonly port: number | undefined;
   private readonly newsieClient: WsNewsie;
@@ -145,7 +147,9 @@ export class Server implements ServerInterface {
         throw new Error('Environment variable: REACT_APP_NNTP_URL or REACT_APP_NNTP_PORT not specified.');
       }
       this.server = new Server(nntpUrl, parseInt(nntpPortStr));
-      await this.server.connectAndVerifyNewsieClient();
+      const webSocket = await this.server.connectAndVerifyNewsieClient();
+      this.keepaliveIntervalReference = setInterval( () => webSocket.send("Gnackwatschn"),
+        this.keepaliveIntervalMs);
     }
     return this.server;
   }
@@ -160,7 +164,7 @@ export class Server implements ServerInterface {
     return new WsNewsie(newsieOptions);
   }
 
-  public async connectAndVerifyNewsieClient() {
+  private async connectAndVerifyNewsieClient(): Promise<WebSocket> {
     const connection = await this.newsieClient.connect();
     if (connection.code !== 200) {
       throw Error('No connection to server.');
@@ -169,6 +173,7 @@ export class Server implements ServerInterface {
     if (!capabilities.capabilities.LIST.includes('NEWSGROUPS')) {
       throw Error('Server does\'t have the required LIST NEWSGROUPS capability.');
     }
+    return connection.socket;
   }
 
   public async getGroupByName(name: string): Promise<Group | null> {
