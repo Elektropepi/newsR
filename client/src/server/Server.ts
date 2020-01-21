@@ -139,7 +139,12 @@ export class Server implements ServerInterface {
 
   public static async instance(): Promise<Server> {
     if (this.server === null) {
-      this.server = new Server('news.tugraz.at', 119);
+      const nntpUrl = process.env.REACT_APP_NNTP_URL;
+      const nntpPortStr = process.env.REACT_APP_NNTP_PORT;
+      if (!nntpUrl || !nntpPortStr) {
+        throw new Error('Environment variable: REACT_APP_NNTP_URL or REACT_APP_NNTP_PORT not specified.');
+      }
+      this.server = new Server(nntpUrl, parseInt(nntpPortStr));
       await this.server.connectAndVerifyNewsieClient();
     }
     return this.server;
