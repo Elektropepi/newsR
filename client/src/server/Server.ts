@@ -1,6 +1,5 @@
 import Newsie, {Command, Options as NewsieOptions} from 'newsie';
 import {Group, GroupInterface} from "../group/Group";
-import {TlsOptions} from "tls";
 
 interface ResponseHandler {
   callback: Function

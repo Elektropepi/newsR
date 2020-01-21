@@ -247,6 +247,7 @@ $biggerFontSize: 1.2rem;
 
       .search-bar {
         flex-grow: 1;
+        overflow: hidden;
       }
 
       img {
