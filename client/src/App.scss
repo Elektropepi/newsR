@@ -100,6 +100,13 @@ $standardFontSize: 1.3rem;
     .bold {
       font-weight: bold;
     }
+
+    .float {
+      font-size: 1.3rem;
+      color: $primaryGreen;
+      float: left;
+      margin: 1.55rem 0 1.55rem 1rem;
+    }
   }
 
   .thread-detail {

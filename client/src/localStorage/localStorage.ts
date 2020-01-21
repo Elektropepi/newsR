@@ -7,6 +7,15 @@ export function subscribeGroup(group: string) {
   localStorage.setItem("subscribedGroups", JSON.stringify(subscribedGroups.concat(group)))
 }
 
+export function unsubscribeGroup(group: string) {
+  const subscribedGroups = getSubscribedGroups();
+
+  if (!subscribedGroups.find(g => g === group))
+    return;
+
+  localStorage.setItem("subscribedGroups", JSON.stringify(subscribedGroups.filter(g => g !== group)))
+}
+
 export function getSubscribedGroups(): string[] {
   const subscribedGroups = localStorage.getItem("subscribedGroups");
 

@@ -1,13 +1,16 @@
 import React from "react";
 import {ListEntry} from "./ListEntry";
-
-export function List<T extends {
+import {IconProp} from "@fortawesome/fontawesome-svg-core";
+export type ListType<T> = {
   url: string
   title: string
   subtitle?: string
   bold?: boolean
-  onPress?: () => void
-}>(props: {
+  icon?: IconProp
+  onPress?: (entry: T) => void
+};
+
+export function List<T extends ListType<T>>(props: {
   data: T[]
 }) {
   const {data} = props;

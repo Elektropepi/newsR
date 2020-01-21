@@ -86,7 +86,7 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
     this.setState({
       sending: true
     });
-    const {group, article, loading, subject, author, content} = this.state;
+    const {group, article, subject, author, content} = this.state;
     if (!group) {
       console.error('Error: cannot send, group not found.');
       return;
