@@ -264,6 +264,8 @@ $biggerFontSize: 1.2rem;
     .app-grid-body {
       margin-top: $headerHeight;
       margin-bottom: $footerHeight;
+      overflow-x: hidden;
+      min-width: 0;
     }
 
     .app-grid-footer {
