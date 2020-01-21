@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/newsR/static/css/main.5df5ac70.chunk.css",
-    "main.js": "/newsR/static/js/main.bb213e39.chunk.js",
-    "main.js.map": "/newsR/static/js/main.bb213e39.chunk.js.map",
+    "main.css": "/newsR/static/css/main.5d124839.chunk.css",
+    "main.js": "/newsR/static/js/main.6cdd7c3c.chunk.js",
+    "main.js.map": "/newsR/static/js/main.6cdd7c3c.chunk.js.map",
     "runtime-main.js": "/newsR/static/js/runtime-main.53d02f2f.js",
     "runtime-main.js.map": "/newsR/static/js/runtime-main.53d02f2f.js.map",
-    "static/js/2.c09381d0.chunk.js": "/newsR/static/js/2.c09381d0.chunk.js",
-    "static/js/2.c09381d0.chunk.js.map": "/newsR/static/js/2.c09381d0.chunk.js.map",
+    "static/js/2.736d6e18.chunk.js": "/newsR/static/js/2.736d6e18.chunk.js",
+    "static/js/2.736d6e18.chunk.js.map": "/newsR/static/js/2.736d6e18.chunk.js.map",
     "index.html": "/newsR/index.html",
-    "precache-manifest.47b72a7a9e36d488eff0ecfae289bfa6.js": "/newsR/precache-manifest.47b72a7a9e36d488eff0ecfae289bfa6.js",
+    "precache-manifest.b5a40121c9f1cd58a075cbf9eb9c0709.js": "/newsR/precache-manifest.b5a40121c9f1cd58a075cbf9eb9c0709.js",
     "service-worker.js": "/newsR/service-worker.js",
-    "static/css/main.5df5ac70.chunk.css.map": "/newsR/static/css/main.5df5ac70.chunk.css.map",
-    "static/js/2.c09381d0.chunk.js.LICENSE": "/newsR/static/js/2.c09381d0.chunk.js.LICENSE",
-    "static/media/logo.svg": "/newsR/static/media/logo.16742dcd.svg"
+    "static/css/main.5d124839.chunk.css.map": "/newsR/static/css/main.5d124839.chunk.css.map",
+    "static/js/2.736d6e18.chunk.js.LICENSE": "/newsR/static/js/2.736d6e18.chunk.js.LICENSE",
+    "static/media/logo.svg": "/newsR/static/media/logo.8e7cbbb2.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.53d02f2f.js",
-    "static/js/2.c09381d0.chunk.js",
-    "static/css/main.5df5ac70.chunk.css",
-    "static/js/main.bb213e39.chunk.js"
+    "static/js/2.736d6e18.chunk.js",
+    "static/css/main.5d124839.chunk.css",
+    "static/js/main.6cdd7c3c.chunk.js"
   ]
 }
