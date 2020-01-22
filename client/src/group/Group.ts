@@ -3,6 +3,7 @@ import {Article as NewsieArticle} from "newsie";
 import {Author} from "../author/Author";
 import {Article, ArticleInterface} from "../article/Article";
 import {GroupCache} from "./GroupCache";
+import packageJson from '../../package.json';
 
 export interface GroupInterface {
   readonly name: string;
@@ -82,6 +83,7 @@ export class Group implements GroupInterface {
         From: author.toString(),
         Newsgroups: this.name,
         Subject: subject,
+        "User-Agent": `newsR ${packageJson.version}`
       },
       body: body
     };
