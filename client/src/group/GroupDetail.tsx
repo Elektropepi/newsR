@@ -1,11 +1,11 @@
-import React from "react";
+import React, {Fragment} from "react";
 import {Group} from "./Group";
 import {ThreadDetail} from "../article/ThreadDetail";
 import {SidebarContent} from "../template/SidebarContent";
 import {Server} from "../server/Server";
 import {Link, Route, RouteComponentProps, Switch} from "react-router-dom"
 import Media from "react-media";
-import {SMALL_SCREEN_QUERY} from "../template/Constants";
+import {LARGE_SCREEN_QUERY, SMALL_SCREEN_QUERY} from "../template/Constants";
 import {Loading} from "../template/Loading";
 import {Article} from "../article/Article";
 import {List} from "../template/List";
@@ -85,13 +85,29 @@ export class GroupDetail extends React.Component<RouteComponentProps<GroupRouteP
     ];
 
     const groupName = group === null ? match.params.name : group.name;
+    const headerWithSearch = <Header name={groupName} searchBar={{filter}} url={match.url} buttons={buttons}/>;
+    const headerWithoutSearch = <Header name={groupName} url={match.url} buttons={buttons}/>;
 
     return (
       <div className="app-grid">
         <Helmet>
           <title>newsR - {groupName}</title>
         </Helmet>
-        <Header name={groupName} searchBar={{filter}} url={match.url} buttons={buttons}/>
+        <Switch>
+          <Route path={`${match.path}/:number`}>
+            <Media queries={{small: SMALL_SCREEN_QUERY, large: LARGE_SCREEN_QUERY}}>
+              {matches => (
+                <Fragment>
+                  {matches.small && headerWithoutSearch}
+                  {matches.large && headerWithSearch}
+                </Fragment>
+              )}
+            </Media>
+          </Route>
+          <Route path={`${match.path}`}>
+            {headerWithSearch}
+          </Route>
+        </Switch>
         <div className="app-grid-body">
           {
             loading
