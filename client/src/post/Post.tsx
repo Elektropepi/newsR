@@ -17,7 +17,8 @@ interface State {
   article: Article | null;
   author: string,
   subject: string,
-  content: string
+  content: string,
+  email: string
 }
 
 export interface PostRouteParams {
@@ -37,7 +38,8 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
     article: null,
     author: '',
     subject: '',
-    content: ''
+    content: '',
+    email: ''
   };
 
   async componentDidMount(): Promise<void> {
@@ -45,7 +47,8 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
     const server = await Server.instance();
     const group = await server.getGroupByName(match.params.name);
     this.setState({
-      author: localStorage.getItem('author')
+      author: localStorage.getItem('author') || "",
+      email: localStorage.getItem('authorEmail') || ""
     });
     if (!group) {
       this.setState({
@@ -86,17 +89,18 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
     this.setState({
       sending: true
     });
-    const {group, article, subject, author, content} = this.state;
+    const {group, article, subject, author, email, content} = this.state;
     if (!group) {
       console.error('Error: cannot send, group not found.');
       return;
     }
-    const authorClass = Author.authorFromString(author);
+    const authorClass = new Author(author, email);
     console.log('author', author, authorClass);
     console.log('subject', subject);
     console.log('content', content);
 
     localStorage.setItem('author', author);
+    localStorage.setItem('authorEmail', email);
     if (article) {
       await article.postFollowup(authorClass, subject, [content]);
     } else {
@@ -110,11 +114,11 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
 
   render() {
     const {match} = this.props;
-    const {group, article, loading, subject, author, content, sending, done} = this.state;
+    const {group, article, loading, subject, author, email, content, sending, done} = this.state;
 
     let headerText = group === null ? match.params.name : group.name;
     if (article) {
-      headerText += ` ${article.number} follow up`
+      headerText += ` ${_Post.replyStr + article.subject}`
     }
     // todo: insert article content as quote..
     // todo: form validation, author
@@ -131,9 +135,10 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
               <form className="post-article" onSubmit={(event: FormEvent<HTMLFormElement>) => this.send(event)}>
                 <div className="input-group">
                   <input
+                    required
                     name="author"
                     type="text"
-                    placeholder="Name <mail@provider.tld>"
+                    placeholder="Name"
                     value={author}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                       this.setState({
@@ -144,6 +149,21 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
                 </div>
                 <div className="input-group">
                   <input
+                    required
+                    name="email"
+                    type="email"
+                    placeholder="email@provider.tld"
+                    value={email}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                      this.setState({
+                        email: event.currentTarget.value
+                      })
+                    }}
+                  />
+                </div>
+                <div className="input-group">
+                  <input
+                    required
                     name="subject"
                     type="text"
                     placeholder="Subject: …"
@@ -156,7 +176,7 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
                   />
                 </div>
                 <div className="input-group">
-                  <input name="group" type="text" value={group.name} readOnly tabIndex={-1}/>
+                  <input name="group" type="hidden" value={group.name} readOnly tabIndex={-1}/>
                 </div>
                 {article && (
                   <div className="input-group">
@@ -170,6 +190,7 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
                 )}
                 <div className="input-group">
               <textarea
+                required
                 value={content}
                 onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
                   this.setState({
