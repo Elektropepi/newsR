@@ -70,6 +70,11 @@ $biggerFontSize: 1.2rem;
     overflow: hidden;
   }
 
+  h3 {
+    font-size: $biggerFontSize;
+    font-weight: normal;
+  }
+
   .header {
     color: lighten($paper, 30%);
     background: $secondaryGreen;
@@ -254,6 +259,10 @@ $biggerFontSize: 1.2rem;
         width: 3rem;
         margin-top: 0.8rem;
         margin-bottom: 0.8rem;
+      }
+
+      .heading-subtitle {
+        margin-top: 1rem;
       }
 
 

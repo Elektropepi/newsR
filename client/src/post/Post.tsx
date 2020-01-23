@@ -117,8 +117,10 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
     const {group, article, loading, subject, author, email, content, sending, done} = this.state;
 
     let headerText = group === null ? match.params.name : group.name;
+    let headerSubtitle = "";
     if (article) {
-      headerText += ` ${_Post.replyStr + article.subject}`
+      headerText += ` ${_Post.replyStr + article.subject}`;
+      headerSubtitle = article.date.format("DD.MM.YYYY HH:mm") + " by " + article.author.name;
     }
     // todo: insert article content as quote..
     // todo: form validation, author
@@ -128,7 +130,7 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
         <Helmet>
           <title>newsR - headerText</title>
         </Helmet>
-        <Header name={headerText} url={match.url}/>
+        <Header name={headerText} subtitle={headerSubtitle} url={match.url}/>
         <div className="app-grid-body">
           {
             loading ? <Loading/> : (group === null ? "Group not found" :

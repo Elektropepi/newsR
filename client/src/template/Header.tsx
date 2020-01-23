@@ -12,7 +12,8 @@ export type Button = {
 }
 
 export function Header(props: {
-  name: string
+  name: string,
+  subtitle?: string,
   url?: string
   searchBar?: {
     filter: (value: string) => void
@@ -24,7 +25,7 @@ export function Header(props: {
     <div className="app-grid-header">
       <Logo/>
       <div className="search-bar">
-        <Heading name={props.name} url={props.url}/>
+        <Heading name={props.name} subtitle={props.subtitle} url={props.url}/>
         {searchBar && searchBar.filter &&
         <input className="search" type="text" placeholder="Search..."
                onChange={(e) => searchBar.filter(e.target.value.toLowerCase())}/>
@@ -51,12 +52,14 @@ function Logo() {
 function Heading(props: {
   url?: string
   name: string
+  subtitle?:string
 }) {
 
     if (props.url) {
       return (
         <Link className="no-link" to={`${props.url}`}>
           <h2>{props.name}</h2>
+          {props.subtitle && (<h3 className="heading-subtitle">{props.subtitle}</h3>)}
         </Link>
       )
     }
