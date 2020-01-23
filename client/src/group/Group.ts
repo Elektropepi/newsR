@@ -83,7 +83,7 @@ export class Group implements GroupInterface {
         From: author.toString(),
         Newsgroups: this.name,
         Subject: subject,
-        "User-Agent": `newsR ${packageJson.version}`
+        "User-Agent": `newsR/${packageJson.version}`
       },
       body: body
     };
