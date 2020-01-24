@@ -328,6 +328,9 @@ form.post-article {
     display: flex;
     justify-content: center;
     margin: 1rem;
+    @media only screen and (max-width: 47rem) {
+      flex-direction: column;
+    }
   }
 
   input, textarea {
@@ -335,6 +338,18 @@ form.post-article {
     font-size: $standardFontSize;
     flex-grow: 2;
     padding: 0.5rem;
+    margin-right: 1rem;
+    min-width: 0;
+
+    @media only screen and (max-width: 47rem) {
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
+
+    &:last-child {
+      margin-right: 0;
+      margin-bottom: 0;
+    }
   }
 
   textarea {
@@ -354,6 +369,11 @@ form.post-article {
     margin-right: 1rem;
     cursor: pointer;
 
+    @media only screen and (max-width: 47rem) {
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
+
     &:disabled {
       background-color: $primaryGray;
     }
@@ -365,6 +385,7 @@ form.post-article {
 
     &:last-child {
       margin-right: 0;
+      margin-bottom: 0;
     }
   }
 }

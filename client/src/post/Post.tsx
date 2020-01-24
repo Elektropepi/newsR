@@ -47,7 +47,7 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
     const server = await Server.instance();
     const group = await server.getGroupByName(match.params.name);
     this.setState({
-      author: localStorage.getItem('author') || "",
+      author: localStorage.getItem('authorName') || "",
       email: localStorage.getItem('authorEmail') || ""
     });
     if (!group) {
@@ -95,11 +95,8 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
       return;
     }
     const authorClass = new Author(author, email);
-    console.log('author', author, authorClass);
-    console.log('subject', subject);
-    console.log('content', content);
 
-    localStorage.setItem('author', author);
+    localStorage.setItem('authorName', author);
     localStorage.setItem('authorEmail', email);
     if (article) {
       await article.postFollowup(authorClass, subject, [content]);
@@ -128,7 +125,7 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
     return (
       <div className="app-grid">
         <Helmet>
-          <title>newsR - headerText</title>
+          <title>newsR - {headerText}</title>
         </Helmet>
         <Header name={headerText} subtitle={headerSubtitle} url={match.url}/>
         <div className="app-grid-body">
@@ -148,8 +145,6 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
                       })
                     }}
                   />
-                </div>
-                <div className="input-group">
                   <input
                     required
                     name="email"
@@ -176,9 +171,6 @@ class _Post extends React.Component<RouteComponentProps<PostRouteParams>, {}> {
                       })
                     }}
                   />
-                </div>
-                <div className="input-group">
-                  <input name="group" type="hidden" value={group.name} readOnly tabIndex={-1}/>
                 </div>
                 {article && (
                   <div className="input-group">
