@@ -12,16 +12,15 @@ import {
   faHandPointRight,
   faHome,
   faList,
-  faMinusSquare,
   faPencilAlt,
-  faPlusSquare,
   faReply,
-  faSpinner
+  faSpinner,
+  faCheckSquare,
+  faSquare
 } from '@fortawesome/free-solid-svg-icons'
 import {faGithub} from '@fortawesome/free-brands-svg-icons'
 
-library.add(faChevronDown, faChevronRight, faHandPointRight, faHome, faReply, faSpinner, faPencilAlt, faCog, faMinusSquare,
-  faPlusSquare, faList, faGithub);
+library.add(faChevronDown, faChevronRight, faHandPointRight, faHome, faReply, faSpinner, faPencilAlt, faCog, faList, faGithub, faCheckSquare, faSquare);
 ReactDOM.render(
   <HashRouter basename={process.env.REACT_APP_BASE_URL}>
     <App/>

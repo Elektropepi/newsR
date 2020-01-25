@@ -62,9 +62,9 @@ export function StartPage() {
 
   const groupIcon = (group: Group): IconProp => {
     if (isGroupSubscribed(group.name))
-      return "minus-square" as IconProp;
+      return "check-square" as IconProp;
 
-    return "plus-square" as IconProp
+    return "square" as IconProp
   };
 
   const manageButton: Button = {
