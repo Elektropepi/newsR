@@ -2,8 +2,8 @@ import React from "react";
 import {ListEntry} from "./ListEntry";
 import {IconProp} from "@fortawesome/fontawesome-svg-core";
 export type ListType<T> = {
-  url: string
   title: string
+  url?: string
   subtitle?: string
   bold?: boolean
   icon?: IconProp
