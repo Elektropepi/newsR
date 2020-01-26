@@ -94,6 +94,7 @@ $biggerFontSize: 1.2rem;
   .list-entry {
     cursor: pointer;
     border-bottom: solid 1px lighten($fontColor, 60%);
+    display: flex;
 
     .list-entry-text {
       display: block;
@@ -117,7 +118,6 @@ $biggerFontSize: 1.2rem;
     .float {
       font-size: 1.3rem;
       color: $primaryGreen;
-      float: left;
       margin: 1.55rem 0 1.55rem 1rem;
     }
   }
