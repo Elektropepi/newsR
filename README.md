@@ -97,3 +97,6 @@ Created at Technical University Graz.
 Github Link: https://github.com/Elektropepi/newsR
 
 Website: https://elektropepi.github.io/newsR
+
+Report: https://courses.isds.tugraz.at/iaweb/projects/ws2019/iaweb-ws2019-g3-project-newsr.pdf
+
