@@ -21,7 +21,7 @@
     "emailjs-mime-parser": "^2.0.7",
     "moment": "^2.24.0",
     "newsie": "^1.1.0",
-    "node-sass": "^4.13.0",
+    "node-sass": "^7.0.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-helmet": "^5.2.1",
